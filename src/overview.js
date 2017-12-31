@@ -30,11 +30,13 @@ function parseOverviewPage(body) {
 
     let results = $columns.slice(1).get().reduce((results, el, i) => {
       let link = $('a[id$="dayLink"]', el).attr('href') || null;
+      let idDay = null;
       if (link) {
         link = new URL(link, BASE_URL);
+        idDay = link.searchParams.get('idDay');
       }
 
-      results[classes[i]] = { link };
+      results[classes[i]] = { link, idDay };
       return results
     }, {});
 

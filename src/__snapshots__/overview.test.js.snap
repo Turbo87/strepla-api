@@ -11,9 +11,11 @@ Object {
       "date": "01.06.2017",
       "results": Object {
         "Hasen": Object {
+          "idDay": "5680",
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5680",
         },
         "Igel": Object {
+          "idDay": "5698",
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5698",
         },
       },
@@ -22,9 +24,11 @@ Object {
       "date": "02.06.2017",
       "results": Object {
         "Hasen": Object {
+          "idDay": "5701",
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5701",
         },
         "Igel": Object {
+          "idDay": "5710",
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5710",
         },
       },
@@ -33,9 +37,11 @@ Object {
       "date": "03.06.2017",
       "results": Object {
         "Hasen": Object {
+          "idDay": null,
           "link": null,
         },
         "Igel": Object {
+          "idDay": null,
           "link": null,
         },
       },
@@ -44,9 +50,11 @@ Object {
       "date": "04.06.2017",
       "results": Object {
         "Hasen": Object {
+          "idDay": null,
           "link": null,
         },
         "Igel": Object {
+          "idDay": null,
           "link": null,
         },
       },
@@ -55,9 +63,11 @@ Object {
       "date": "05.06.2017",
       "results": Object {
         "Hasen": Object {
+          "idDay": "5794",
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5794",
         },
         "Igel": Object {
+          "idDay": "5797",
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5797",
         },
       },
