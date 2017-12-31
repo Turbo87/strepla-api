@@ -1,3 +1,4 @@
 const { overview } = require('./src/overview');
+const { scoreDay } = require('./src/score-day');
 
-overview(388).then(it => console.log(JSON.stringify(it, null, 2)));
+module.exports = { overview, scoreDay };
