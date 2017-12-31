@@ -30,43 +30,44 @@ function parseScoreDay(body) {
   let remark = $('[id$="lblRemark"]', $validResult).text().trim();
 
   let $rows = $validResult.find('table').eq(0).find('tr').slice(1);
-  let results = $rows.map((i, el) => {
-    let rank = $('[id$="lblDayRank"]', el).text().trim() || null;
-    if (rank) {
-      rank = parseInt(rank, 10);
-    }
+  let results = $rows.map((i, el) => parseResult($(el))).get();
 
-    let competitionId = $('[id$="lblWBK"]', el).text().trim() || null;
-    let name = $('[id$="lblName"]', el).text().trim() || null;
-    let country = $('[id$="lblCountry"]', el).text().trim() || null;
-    let glider = $('[id$="lblGlider"]', el).text().trim() || null;
-    let taskStartTime = $('[id$="lblStartGate"]', el).text().trim() || null;
-    let time = $('[id$="lblTotalTime"]', el).text().trim() || null;
-    let distance = $('[id$="lblDistTrack"]', el).text().trim() || null;
-    if (distance) {
-      distance = parseFloat(distance);
-    }
+  return { competition, date, 'class': clazz, taskDescription, remark, results };
+}
 
-    let speed = $('[id$="lblvTask"]', el).text().trim() || null;
-    if (speed) {
-      speed = parseFloat(speed);
-    }
+function parseResult($result) {
+  let rank = $result.find('[id$="lblDayRank"]').text().trim() || null;
+  if (rank) {
+    rank = parseInt(rank, 10);
+  }
 
-    let penaltyPoints = $('[id$="lblPenlty"]', el).text().trim() || '0';
-    if (penaltyPoints) {
-      penaltyPoints = parseInt(penaltyPoints, 10);
-    }
+  let competitionId = $result.find('[id$="lblWBK"]').text().trim() || null;
+  let name = $result.find('[id$="lblName"]').text().trim() || null;
+  let country = $result.find('[id$="lblCountry"]').text().trim() || null;
+  let glider = $result.find('[id$="lblGlider"]').text().trim() || null;
+  let taskStartTime = $result.find('[id$="lblStartGate"]').text().trim() || null;
+  let time = $result.find('[id$="lblTotalTime"]').text().trim() || null;
+  let distance = $result.find('[id$="lblDistTrack"]').text().trim() || null;
+  if (distance) {
+    distance = parseFloat(distance);
+  }
 
-    let points = $('[id$="lblDayPoints"]', el).text().trim() || null;
-    if (points) {
-      points = parseInt(points, 10);
-    }
+  let speed = $result.find('[id$="lblvTask"]').text().trim() || null;
+  if (speed) {
+    speed = parseFloat(speed);
+  }
 
-    return { rank, competitionId, name, country, glider, taskStartTime, time, distance, speed, penaltyPoints, points };
-  }).get();
+  let penaltyPoints = $result.find('[id$="lblPenlty"]').text().trim() || '0';
+  if (penaltyPoints) {
+    penaltyPoints = parseInt(penaltyPoints, 10);
+  }
 
-  return {
-    competition, date, 'class': clazz, taskDescription, remark, results };
+  let points = $result.find('[id$="lblDayPoints"]').text().trim() || null;
+  if (points) {
+    points = parseInt(points, 10);
+  }
+
+  return { rank, competitionId, name, country, glider, taskStartTime, time, distance, speed, penaltyPoints, points };
 }
 
 module.exports = { scoreDay, parseScoreDay };
