@@ -1,0 +1,1835 @@
+
+
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+	<head><title>
+	scoring*StrePla - Deutsche Segelflug-Meisterschaft 15m/18m/OK:Daily Results
+</title>
+
+		<script type="text/javascript" src="/scs/scripts/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="/scs/scripts/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="/scs/scripts/URI.min.js"></script>
+    	<script type="text/javascript" src="/scs/scripts/util.js"></script>
+    	<script type="text/javascript" src="/scs/scripts/jqUtil.js"></script>
+		
+		<link rel="stylesheet" type="text/css" href="../scripts/jquery-ui.min.css" /><link rel="stylesheet" type="text/css" href="../css/default.css" /><link rel="stylesheet" type="text/css" href="../css/masterPage.css" />
+
+		<script type="text/javascript">
+
+		    var isMobile = {
+		        // http://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
+		        Android: function () {
+		            return navigator.userAgent.match(/Android/i);
+		        },
+		        BlackBerry: function () {
+		            return navigator.userAgent.match(/BlackBerry/i);
+		        },
+		        iOS: function () {
+		            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		        },
+		        Opera: function () {
+		            return navigator.userAgent.match(/Opera Mini/i);
+		        },
+		        Windows: function () {
+		            return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+		        },
+		        any: function () {
+		            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+		        }
+		    };
+
+
+		    function calcLayout()
+		    {
+		        var mainFrame = $("#master_frame");
+		        var leftFrame = $("#left_frame");
+		        var middleFrame = $("#middle_frame");
+		        middleFrame.width(mainFrame.width() - leftFrame.width() - 4);
+            }
+
+		    $(window).resize(function () {
+		        calcLayout();
+		    });
+
+			function showLoginPanel(url) {
+				$("#content_login").dialog("open");
+			}
+
+			function onLoginSubmit()
+			{
+			    $.ajax(
+                {
+                    type: "POST",
+                    url: "/scs/ws/validateUser.ashx",
+                    data: { cmd: "validate", username: $("#username").val(), pwd: $("#password").val() },
+                    success: function (xmlResponse, status) {
+                        var status = false;
+                        $(xmlResponse).find('status').each(function () {
+                            status = ($(this).text() === 'True');
+                        });
+
+                        if (status == true) {
+                            $(xmlResponse).find('url').each(function () {
+                                var url = $(this).text();
+                                if (url != "") {
+                                    window.location.href = $(this).text();
+                                    return;
+                                }
+                            });
+                        } else {
+                            $(xmlResponse).find('msg').each(function () {
+                                $("#errMsg").html($(this).text());
+                            });
+                        }
+                    },
+                    error: function (xmlResponse, status, errorThrown) {
+                        $("#errMsg").html('Error login: ' + errorThrown);
+                    }
+
+                });
+			    return false;
+			}
+
+			$(document).ready(function () {
+
+                // check for mobile device
+			    var params = getUrlVars();
+			    var mode = $.trim(decodeURIComponent(params["mode"]));
+			    // if (mode != 'desktop') {
+			    //     console.log('isMobile ' + isMobile.any());
+			    //     if (isMobile.any()) {
+			    //         urlMobile = "/scs/mobile/index.html";
+			    //         window.location = urlMobile;
+			    //     }
+			    // }
+
+				$("#content_login").dialog({
+					autoOpen: false,
+					width:300,
+					modal:true,
+					resizeable:false,
+					title: "Login",
+					position: {
+					    my: 'right top',
+					    at: 'right bottom',
+					    of: $('#idSignIn')
+					}
+
+				});
+				$("#content_login").keydown(function (event) {
+				    if (event.keyCode == 13) {
+				        onLoginSubmit();
+				        return false;
+				    }
+				});
+
+				var uri = new URI(window.location);
+				var fnPage = uri.filename();
+				// console.log("URI: " + uri + " fn: " + fnPage);
+
+				if ($("#public_toolbar").length > 0) {
+
+					$("#public_toolbar div").each(function (index) {
+
+						var uriItem = new URI($(this).find("a").attr("href"));
+						uriItem = uriItem.filename();
+						// console.log("uriItem: " + uriItem);
+						if (uriItem == fnPage) {
+							$(this).addClass("public_item_selected");
+						}
+
+						$(this).hover(function () {
+							$(this).toggleClass("public_item_hover");
+						});
+
+						$(this).click(function () {
+						    window.location.href = $(this).find("a").attr("href");
+						});
+
+					});
+				}
+
+				$(".local_item").each(function (index) {
+
+					var curPage = $(".local_toolbar").attr("page"); ;
+					var curItem = $(this).find("a").attr("id");
+//					console.log(" curPage " + curPage + " curItem " + curItem);
+					if (typeof curItem != 'undefined' && curItem.indexOf(curPage) != -1) {
+						$(this).addClass("local_item_selected");
+					}
+
+					var href = $(this).find("a").attr("href");
+					if (typeof href != 'undefined') {
+						$(this).click(function () {
+							if (typeof href != 'undefined') {
+								//console.log("click " + href);
+							    window.location.href=href;
+								return false;
+							}
+						});
+					}
+				});
+
+				$(".local_item_metro").each(function (index) {
+
+				    var curPage = $(".local_toolbar_metro").attr("page");;
+				    var curItem = $(this).find("a").attr("id");
+				    console.log("link: " + curItem);
+                    // HACK, remove link to map display
+				    if (typeof curItem != 'undefined' && curItem.indexOf("lnkMap") > -1) {
+				        // $(this).hide();
+				    }
+					// HACK, remove link to map display
+
+				    var selectedItem = false;
+				    if (typeof curItem != 'undefined' && curItem.indexOf(curPage) != -1) {
+				        selectedItem = true;
+				        $(this).addClass("item_metro_selected");
+				    }
+
+				    var href = $(this).find("a").attr("href");
+				    var target = $(this).find("a").attr("target");
+				    if (typeof href != 'undefined' && selectedItem == false) {
+				        $(this).click(function () {
+				            if (typeof href != 'undefined') {
+				                //console.log("click " + href);
+				                if (target == '_blank') {
+				                    var win = window.open(href, '_blank');
+				                } else {
+                                    window.location.href = href;
+				                }
+				                return false;
+				            }
+				        });
+				    }
+				});
+
+				calcLayout();
+			});
+
+		</script>
+
+		<style type="text/css">   
+			
+			.public_item_hover a:hover {
+				text-decoration:none;
+			}
+
+			#idSignIn 
+			{
+				cursor: pointer;
+			}
+				
+		</style>
+
+		
+
+	<script type="text/javascript">
+	    function flight_not_pubic()
+	    {
+	        myAlert('Die IGC Datei ist nicht veröffentlicht.', "scoring*StrePla");
+	    }
+	</script>
+	<style type="text/css">
+	</style>
+</head>
+
+	<body>
+	    <form name="aspnetForm" method="post" action="#" id="aspnetForm" autocomplete="on">
+<div>
+<input type="hidden" name="__EVENTTARGET" id="__EVENTTARGET" value="" />
+<input type="hidden" name="__EVENTARGUMENT" id="__EVENTARGUMENT" value="" />
+<input type="hidden" name="__LASTFOCUS" id="__LASTFOCUS" value="" />
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
+
+<script type="text/javascript">
+//<![CDATA[
+var theForm = document.forms['aspnetForm'];
+if (!theForm) {
+    theForm = document.aspnetForm;
+}
+function __doPostBack(eventTarget, eventArgument) {
+    if (!theForm.onsubmit || (theForm.onsubmit() != false)) {
+        theForm.__EVENTTARGET.value = eventTarget;
+        theForm.__EVENTARGUMENT.value = eventArgument;
+        theForm.submit();
+    }
+}
+//]]>
+</script>
+
+
+<div>
+
+	<input type="hidden" name="__EVENTVALIDATION" id="__EVENTVALIDATION" value="/wEdAA2vVXD1oYELeveMr0vHCmYPfjRsJ7hIZ/OcB8T8Gqi7BlgLlpNMCOHarVCOi3P0E1Vv03KYoCDosBjUP9HnXyiJZQ6YBaFnpROe98E+KHFilte/lf8B0JJaJ8v15b7Xu8g2AXWmr3DNUjNYiA3uuVDWOu2BBsG1o53je38vIXtTPQqGZLX9kHEWo49nHqvt0mU7iNZsjLKbbun5DTO2RRRlnV7EnooDR9BtcP5x15F1aXRBxfxJzRkM9l1PJPm5/HzHOq6CEmpV9ttn9d/KxK2gtWHADr3ILdITX/HJzNdsLCamspib6MjbvOKpWwMGh4E=" />
+</div>
+			
+			<div id="banner">
+				<a id="ctl00_lnkMain" href="../default.aspx"><img src="../img/scsBanner.jpg" id="ctl00_logo" title="scoring*StrePla" /></a>
+			
+				<div id="top_navigation_left">
+					<span id="ctl00_lblDate">12/31/2017 2:48:29 PM</span>
+				</div>
+
+				<div id="top_navigation_right">
+					<div style="position:absolute; right:0px; top:-12px;">
+						<a href="http://strepla.de/scs/public/scoreDay.aspx?cID=385&className=15m&dateScoring=20170705&lang=de-DE" id="ctl00_de_DE">
+							<img src="../img/de.png" id="ctl00_img_de" alt="Deutsch" />
+						</a>
+						<a href="http://strepla.de/scs/public/scoreDay.aspx?cID=385&className=15m&dateScoring=20170705&lang=en-US" id="ctl00_en_US">
+							<img src="../img/us.png" id="ctl00_img_us" alt="English" />
+						</a>
+					</div>
+
+					<a href="../etc/about.aspx" id="ctl00_A3">Info scoring*StrePla</a>
+					<a href="../etc/content_policy.aspx" id="ctl00_A1">Terms of service</a>
+					<a href="../etc/impressum.aspx" id="ctl00_A2">About</a>
+					<a id="idSignIn" onclick="showLoginPanel();">Sign on</a>
+				</div>
+			</div>
+
+			<div id="ctl00_pnlToolbar">
+	
+				<div id="public_toolbar">
+					<div class="public_item">
+						<a href="overview.aspx?cID=385" id="ctl00_overview">Results</a>
+					</div>
+					<div class="public_item">
+						<a href="competitor.aspx?cID=385" id="ctl00_competitor">Competitors</a>
+					</div>
+					<div  class="public_item">
+						<a href="downloads.aspx?cID=385" id="ctl00_downloads">Competition Data</a>
+					</div>
+				</div>
+			
+</div>
+
+			<div id="master_frame">
+
+				<div id="left_frame">
+					<a href="http://www.segelflug-dm.de" id="ctl00_lnkComp" target="_blank">
+						<img id="ctl00_logoComp" src="/scs/data/comp_385/data/logo.png" style="border-width:0px;width:162px;" /><br />
+					</a>
+
+					
+
+					<div id="left_frame_content">
+						
+	<div>
+		<b>Class:</b><br />
+		<select name="ctl00$NavLeft$listCompClasses" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$NavLeft$listCompClasses\&#39;,\&#39;\&#39;)&#39;, 0)" id="ctl00_NavLeft_listCompClasses" style="width:95%">
+	<option selected="selected" value="814">15m</option>
+	<option value="817">18m</option>
+	<option value="820">OK</option>
+
+</select>
+	</div>
+	<div style="margin-top:3px">
+		for<br />
+        <div class="vCenterContainer">
+            <span class="local_item_metro" title="Vorhergehender Wertungstag">
+			    <a href="scoreDay.aspx?cID=385&className=15m&dateScoring=20170704" id="ctl00_NavLeft_lnkPrevWT"><img src="../img/metro_back.png" id="ctl00_NavLeft_Img1" class="metro_img_left_right" /></a>
+		    </span>
+
+            <select name="ctl00$NavLeft$listDays" onchange="javascript:setTimeout(&#39;__doPostBack(\&#39;ctl00$NavLeft$listDays\&#39;,\&#39;\&#39;)&#39;, 0)" id="ctl00_NavLeft_listDays" style="width:120px; margin-left:2px; margin-right:1px">
+	<option value="6124">7. Tag, 14.07</option>
+	<option value="6109">6. Tag, 13.07</option>
+	<option value="6064">5. Tag, 08.07</option>
+	<option value="6055">4. Tag, 07.07</option>
+	<option value="6046">3. Tag, 06.07</option>
+	<option selected="selected" value="6037">2. Tag, 05.07</option>
+	<option value="6028">1. Tag, 04.07</option>
+
+</select>	
+
+		    <span class="local_item_metro" title="Nächster Wertungstag">
+			    <a href="scoreDay.aspx?cID=385&className=15m&dateScoring=20170706" id="ctl00_NavLeft_lnkNextWT"><img src="../img/metro_next.png" id="ctl00_NavLeft_Img3" class="metro_img_left_right" /></a>
+		    </span>
+        </div>
+	</div>
+
+   	<div class="local_toolbar_metro" page="lnkResults">
+		<div class="local_item_metro" title="Dayly results">
+			<a href="scoreDay.aspx?cID=385&className=15m&dateScoring=20170705" id="ctl00_NavLeft_lnkResults" class="vCenterContainer">
+                <img src="../img/metro_daily.png" id="ctl00_NavLeft_Img4" style="" class="metro_img" />
+                <span class="local_item_metro_name">Dayly results</span>
+			</a> 
+		</div>
+		<div class="local_item_metro" title="Overall results">
+			<a href="scoreOverall.aspx?cID=385&className=15m&dateScoring=20170705" id="ctl00_NavLeft_lnkOverall" class="vCenterContainer">
+                <img src="../img/metro_total.png" id="ctl00_NavLeft_Img2" class="metro_img" />
+                <span class="local_item_metro_name">Overall results</span>
+			</a>
+		</div>
+
+		<div class="local_item_metro" title="Task">
+			<a href="taskSheet.aspx?cID=385&className=15m&dateScoring=20170705" id="ctl00_NavLeft_lnkTaskSheet" class="vCenterContainer">
+                <img src="../img/metro_task.png" id="ctl00_NavLeft_Img7" class="metro_img" />
+                <span class="local_item_metro_name">Task</span>
+			</a>
+		</div>
+
+		<div class="local_item_metro" title="Show flight tracks on map">
+			<a href="showFlights2d.aspx?cId=385&idDay=6037" id="ctl00_NavLeft_lnkMap" class="vCenterContainer">
+                <img src="../img/metro_flights_on_map.png" id="ctl00_NavLeft_Img6" class="metro_img" />
+                <span class="local_item_metro_name">Show flight tracks on map</span>
+			</a>
+		</div>
+
+		<div class="local_item_metro" title="PDF Version">
+			<a href="../data/comp_385/data/07.05/15m_Daily.pdf?callId=469024996" id="ctl00_NavLeft_lnkPDF" class="vCenterContainer" target="_blank">
+                <img src="../img/metro_as_pdf.png" id="ctl00_NavLeft_Img5" class="metro_img" />
+                <span class="local_item_metro_name">PDF Version</span>
+			</a>
+		</div>
+    </div>
+
+
+
+					</div>
+				</div>
+
+				<div id="middle_frame">
+
+					<div id="myTitleElement">
+						
+
+					</div>
+
+					<div id="public_contest_info">
+						<div class="h1"><span id="ctl00_lblCompName">Deutsche Segelflug-Meisterschaft 15m/18m/OK</span></div>
+						<span id="ctl00_lblCompDescription" class="h2">Stendal-Borstel (EDOV) 7/4/2017-7/14/2017</span>
+					</div>
+
+					<div class="">
+						
+
+
+	<div class="h3a" style="margin-bottom:10px">
+    	<span id="ctl00_Content_lblDate">7/5/2017, 2. Day</span> - 
+		<span id="ctl00_Content_lblCompClass">15m</span> - 
+		<span id="ctl00_Content_lblCompDay">Final scoring</span>	
+	</div>
+
+	<div id="ctl00_Content_pnlValidResult">
+	
+
+		<div style="width:780px">
+			<div class="h5" style="width:100%">
+				<div>
+					<span id="ctl00_Content_lblTaskDescription">Tagesaufgabe A - Racing-Task (RT)  147.0 km:  228Start West-> 093Gorleben Foerder-> 051Daehre Bf Stillg-> 231Stendal Borstel</span>
+				</div>
+				<div style="margin-top:5px">
+					<span id="ctl00_Content_lblRemark">Pmax=484,9 Pdm=254,0 Pvm=230,9 Do=147,0 f=1,000 N=35 n1=32 n2=25
+dnf=did not fly</span>
+				</div>
+			</div>
+			
+				<table class="std std_alternating std_select_row" style="margin-top:10px; width:100%;">
+				<tr class="std_head">
+					<td>
+						#
+					</td>
+					<td>
+						CID
+					</td>
+					<td>
+						Name
+					</td>
+					<td>
+						Country
+					</td>
+					<td>
+						Glider
+					</td>
+					<td>
+						Departure<br />
+						[hh:mm:ss]
+					</td>
+					<td>
+						Time<br />
+						[hh:mm:ss]
+					</td>
+					<td>
+						Task<br />
+						[<span id="ctl00_Content_resultList_ctl00_lblDistUnit">km</span>]
+					</td>
+					<td>
+						Speed<br />
+						[<span id="ctl00_Content_resultList_ctl00_lblSpeedUnit">km/h</span>]
+					</td>
+					<td>
+						Penalty
+					</td>
+					<td>
+						Points
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl01_lblDayRank">1</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblWBK">VV</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107134" id="ctl00_Content_resultList_ctl01_lblName">Holighaus, Tilo</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblCountry">BW | FG Wolf Hirth</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblGlider">Ventus 2ax</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblStartGate">16:04:32</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblTotalTime">01:48:40</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblvTask">81.15</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl01_lblDayPoints">469</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl02_lblDayRank">2</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblWBK">FH</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107131" id="ctl00_Content_resultList_ctl02_lblName">Hein, Freddy</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblCountry">BW | FG Schwäbisch-Gmünd</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblStartGate">16:02:22</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblTotalTime">01:50:25</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblvTask">79.87</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl02_lblDayPoints">459</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl03_lblDayRank">3</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblWBK">BS</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107161" id="ctl00_Content_resultList_ctl03_lblName">Mühl, Stefanie</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblCountry">BY | LSV Regensburg</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblGlider">ASG 29 E</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblStartGate">16:01:13</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblTotalTime">01:51:34</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblvTask">79.04</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl03_lblDayPoints">452</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl04_lblDayRank">3</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblWBK">BK</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107182" id="ctl00_Content_resultList_ctl04_lblName">Senne, Katrin U.</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblCountry">BW | FSV Sindelfingen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblGlider">ASG 29 E</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblStartGate">16:01:06</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblTotalTime">01:51:35</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblvTask">79.03</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl04_lblDayPoints">452</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl05_lblDayRank">5</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblWBK">EL</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107164" id="ctl00_Content_resultList_ctl05_lblName">Nölke, Sören</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblCountry">BW | FSV Sindelfingen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblGlider">Discus 2b</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblStartGate">16:00:42</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblTotalTime">01:52:27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblvTask">78.42</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl05_lblDayPoints">447</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl06_lblDayRank">6</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblWBK">3G</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107170" id="ctl00_Content_resultList_ctl06_lblName">Pfennig, Michael</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblCountry">NW | LfV Greven</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblGlider">Ventus 2b</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblStartGate">15:59:01</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblTotalTime">01:53:45</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblvTask">77.53</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl06_lblDayPoints">439</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl07_lblDayRank">7</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblWBK">DM</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107113" id="ctl00_Content_resultList_ctl07_lblName">Büttner, Martin</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblCountry">HH | Hamburger VfL</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblStartGate">15:58:52</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblTotalTime">01:54:15</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblvTask">77.19</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl07_lblDayPoints">436</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl08_lblDayRank">8</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblWBK">AS</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107185" id="ctl00_Content_resultList_ctl08_lblName">Späth, Alexander</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblCountry">BW | AC Esslingen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblStartGate">16:02:33</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblTotalTime">01:56:41</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblvTask">75.58</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl08_lblDayPoints">423</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl09_lblDayRank">9</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblWBK">LT</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107191" id="ctl00_Content_resultList_ctl09_lblName">Theisinger, Laurenz</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblCountry">RP | DJK SFG Landau</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblGlider">ASG 29</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblStartGate">16:14:41</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblTotalTime">02:09:39</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblvTask">68.02</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl09_lblDayPoints">360</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl10_lblDayRank">10</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblWBK">PS</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107158" id="ctl00_Content_resultList_ctl10_lblName">Mihm, Julian</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblCountry">HE | Rhönflug Poppenhausen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblGlider">ASW 27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblStartGate">16:13:57</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblTotalTime">02:10:41</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblvTask">67.48</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl10_lblDayPoints">355</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl11_lblDayRank">10</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblWBK">PE</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107098" id="ctl00_Content_resultList_ctl11_lblName">Bauder, Sebastian</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblCountry">BW | FG Blaubeuren</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblStartGate">16:13:58</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblTotalTime">02:10:41</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblvTask">67.48</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl11_lblDayPoints">355</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl12_lblDayRank">10</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblWBK">V</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107167" id="ctl00_Content_resultList_ctl12_lblName">Omsels, Jan</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblCountry">HE | LSC Bad Homburg</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblGlider">Discus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblStartGate">16:13:39</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblTotalTime">02:10:51</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblvTask">67.39</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl12_lblDayPoints">355</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl13_lblDayRank">13</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblWBK">FT</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107122" id="ctl00_Content_resultList_ctl13_lblName">Frey, Yannick</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblCountry">RP | DJK SFG Landau</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblGlider">ASW 27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblStartGate">16:14:16</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblTotalTime">02:10:58</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblvTask">67.34</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl13_lblDayPoints">354</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl14_lblDayRank">14</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblWBK">GT</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107128" id="ctl00_Content_resultList_ctl14_lblName">Hagemann, Marianne</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblCountry">NI | LSV Gifhorn</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblGlider">ASW 27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblStartGate">16:04:12</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblTotalTime">02:12:52</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblvTask">66.37</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl14_lblDayPoints">346</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl15_lblDayRank">15</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblWBK">4Z</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107149" id="ctl00_Content_resultList_ctl15_lblName">Lichtmannecker, Stefan</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblCountry">BY | LSV Landshut </span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblStartGate">16:02:30</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblTotalTime">02:13:59</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblvTask">65.82</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl15_lblDayPoints">341</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl16_lblDayRank">16</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblWBK">1G</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107107" id="ctl00_Content_resultList_ctl16_lblName">Bieler, Henrik</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblCountry">RP | AeC Landau</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblGlider">Ventus 2b</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblStartGate">16:14:23</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblTotalTime">02:15:25</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblvTask">65.13</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl16_lblDayPoints">336</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl17_lblDayRank">17</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblWBK">2X</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107197" id="ctl00_Content_resultList_ctl17_lblName">Wollschläger, Swen</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblCountry">NI | LSG Waterkant-Zetel</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblGlider">Ventus 2cxa</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblStartGate">15:58:24</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblTotalTime">01:46:14</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblvTask">83.01</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblPenlty">157</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl17_lblDayPoints">328</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl18_lblDayRank">18</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblWBK">L7</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107179" id="ctl00_Content_resultList_ctl18_lblName">Schwarzer, Steffen</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblCountry">BW | LSR Aalen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblGlider">ASW 27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblStartGate">16:04:56</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblTotalTime">02:19:49</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblvTask">63.08</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl18_lblDayPoints">319</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl19_lblDayRank">19</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblWBK">DS</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107095" id="ctl00_Content_resultList_ctl19_lblName">Bauder, David</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblCountry">BY | SFG Donauwörth</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblStartGate">16:04:51</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblTotalTime">02:19:58</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblvTask">63.01</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl19_lblDayPoints">318</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl20_lblDayRank">20</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblWBK">P10</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107176" id="ctl00_Content_resultList_ctl20_lblName">Schramek, Eike Björn</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblCountry">NI | AC Wolfsburg</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblGlider">ASW 27b</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblStartGate">16:03:59</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblTotalTime">02:21:34</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblvTask">62.29</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl20_lblDayPoints">312</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl21_lblDayRank">21</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblWBK">DR</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107173" id="ctl00_Content_resultList_ctl21_lblName">Schick, Marc</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblCountry">RP | FSV Neustadt/Wst</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblGlider">Ventus 2c</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblStartGate">16:14:22</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblTotalTime">02:22:05</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblvTask">62.07</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl21_lblDayPoints">310</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl22_lblDayRank">22</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblWBK">CZ</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107101" id="ctl00_Content_resultList_ctl22_lblName">Bauer, Hanns-Günther</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblCountry">BY | SFZ Ottengrüner Heide</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblGlider">ASG 29</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblStartGate">16:02:10</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblTotalTime">02:22:39</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblvTask">61.82</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl22_lblDayPoints">308</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl23_lblDayRank">22</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblWBK">19</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107194" id="ctl00_Content_resultList_ctl23_lblName">Wettemann, Thomas</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblCountry">BW | FG Neckartal Köngen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblStartGate">16:01:55</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblTotalTime">02:22:47</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblvTask">61.77</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl23_lblDayPoints">308</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl24_lblDayRank">22</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblWBK">EX</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107119" id="ctl00_Content_resultList_ctl24_lblName">Eisele, Michael</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblCountry">BW | FG Neckartal Köngen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblGlider">Ventus 2ax</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblStartGate">16:01:59</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblTotalTime">02:22:48</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblvTask">61.76</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl24_lblDayPoints">308</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl25_lblDayRank">25</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblWBK">47</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107116" id="ctl00_Content_resultList_ctl25_lblName">Edelhoff, Hans-Otto</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblCountry">NW | AC Hagen</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblGlider">Ventus 2a</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblStartGate">15:59:19</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblTotalTime">02:34:21</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblvTask">57.13</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl25_lblDayPoints">269</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl26_lblDayRank">26</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblWBK">KR</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107155" id="ctl00_Content_resultList_ctl26_lblName">Malzacher, Sandra</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblCountry">HE | SFC Riedelbach/Taunus</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblGlider">Ventus 2b</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblStartGate">16:06:01</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblTotalTime">02:48:25</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblDistTrack">147.0</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblvTask">52.36</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl26_lblDayPoints">254</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl27_lblDayRank">27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblWBK">JH</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107140" id="ctl00_Content_resultList_ctl27_lblName">Jörges, Chris</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblCountry">HE | Rhönflug Gersfeld</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblGlider">ASW 27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblStartGate">16:01:18</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblDistTrack">133.1</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl27_lblDayPoints">230</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl28_lblDayRank">28</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblWBK">NH</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107137" id="ctl00_Content_resultList_ctl28_lblName">Horbrügger, Herbert</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblCountry">BB | FK Brandenburg</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblGlider">LS 6</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblStartGate">16:01:49</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblDistTrack">113.8</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl28_lblDayPoints">197</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl29_lblDayRank">29</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblWBK">GO</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107125" id="ctl00_Content_resultList_ctl29_lblName">Gottschalk, Felix</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblCountry">NI | LSV Gifhorn</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblGlider">ASW 27b</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblStartGate">16:01:42</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblDistTrack">111.1</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl29_lblDayPoints">192</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl30_lblDayRank">30</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblWBK">G1</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107110" id="ctl00_Content_resultList_ctl30_lblName">Böttigheimer, Christoph</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblCountry">BY | FC Eichstätt</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblGlider">ASW 27</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblStartGate">16:04:40</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblDistTrack">112.2</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblPenlty">5</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl30_lblDayPoints">189</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl31_lblDayRank">31</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblWBK">KB</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107104" id="ctl00_Content_resultList_ctl31_lblName">Bethge, Sebastian</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblCountry">HE | Mittelh.Verein Sontra</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblGlider">Ventus cT</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblStartGate">16:05:05</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblDistTrack">105.1</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl31_lblDayPoints">182</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl32_lblDayRank">32</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblWBK">LEO</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107188" id="ctl00_Content_resultList_ctl32_lblName">Theisinger, Georg</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblCountry">RP | DJK SFG Landau</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblGlider">ASG 29</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblStartGate">16:14:13</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblDistTrack">104.8</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl32_lblDayPoints">181</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl33_lblDayRank">33</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblWBK">IY</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107152" id="ctl00_Content_resultList_ctl33_lblName">Lindenberg, Kai</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblCountry">BW | LSG Breisgau</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblGlider">ASW 27b</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblStartGate">16:14:59</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblDistTrack">73.1</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl33_lblDayPoints">126</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl34_lblDayRank">34</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblWBK">K</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107143" id="ctl00_Content_resultList_ctl34_lblName">Klossok, Annette</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblCountry">NW | LfV Greven</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblGlider">ASG 29 E</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblStartGate">16:01:34</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblDistTrack">70.7</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl34_lblDayPoints">122</span>
+					</td>
+				</tr>
+			
+				<tr>
+					<td style="text-align:center">
+						<span id="ctl00_Content_resultList_ctl35_lblDayRank">35</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblWBK">GK</span>
+					</td>
+					<td>
+						<a href="igcFile.aspx?idResult=107146" id="ctl00_Content_resultList_ctl35_lblName">Kölle, Günter</a>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblCountry">BW | FG Schwäbisch-Gmünd</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblGlider">Ventus c</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblStartGate">16:14:28</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblTotalTime"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblDistTrack">66.6</span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblvTask"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblPenlty"></span>
+					</td>
+					<td>
+						<span id="ctl00_Content_resultList_ctl35_lblDayPoints">115</span>
+					</td>
+				</tr>
+			
+				</table>
+			
+		
+			<div id="ctl00_Content_trRemarkPlt" style="margin-top:10px;">
+		
+			
+					<table class="std std_alternating">
+					<tr class="std_head">
+						<td style="width:200px">
+							Remark
+						</td>
+						<td>
+							CID
+						</td>
+					</tr>
+				
+					<tr>
+						<td>
+							<span id="ctl00_Content_rptPremarks_ctl01_lblRemark">Loggerabgabe zu spät</span>
+						</td>
+						<td>
+							<span id="ctl00_Content_rptPremarks_ctl01_lblWBK">G1</span>
+						</td>
+					</tr>
+				
+					<tr>
+						<td>
+							<span id="ctl00_Content_rptPremarks_ctl02_lblRemark">Zielkreishöhe unterschritten</span>
+						</td>
+						<td>
+							<span id="ctl00_Content_rptPremarks_ctl02_lblWBK">2X</span>
+						</td>
+					</tr>
+				
+					</table>
+				
+		
+	</div>
+		
+			<div id="ctl00_Content_trRemark" style="margin-top:10px;">
+		
+			
+	</div>
+		
+			<div>
+			Scoring created at <span id="ctl00_Content_lblDateScoring">7/7/2017</span> at <span id="ctl00_Content_lblTimeScoring">10:37 local</span>
+			</div>
+		</div>
+	
+</div>
+
+	<span id="ctl00_Content_lblErrorMsg"></span>
+
+
+					</div>
+
+					<div id="ctl00_divSponsor" style="margin-top:10px;">
+	
+						<img id="ctl00_imgSponsor" src="/scs/data/comp_385/data/logoSponsor.png" style="border-width:0px;width:784px;" />
+					
+</div>
+				</div>
+			</div>
+
+			<div class="clear"></div>
+
+			<div id="content_login" class="std std_border std_rounded_corners" style="width:400px;">
+				<table>
+					<tr>
+						<td colspan="2">
+							<div id="errMsg" class="errorMsg"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Benutzername:
+						</td>
+						<td>
+							<input id="username" type="text"  name="username" style="width:90%"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Passwort:
+						</td>
+						<td>
+							<input id="password" type="password"  name="password" style="width:90%"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="height: 26px">
+                            <input id="btnLogin" type="submit" value="Login" onclick="return onLoginSubmit();"/>
+							<a href="forgotPassword.aspx" id="ctl00_aForgotPwd"><span style="font-weight:bold; color:#669933;">Passwort vergessen</span></a>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							Sie wollen einen eigenen Wettbewerb ausrichten, sind noch nicht registriert? <a href="http://www.strepla.de/scs/General/Deutsch/indexBestellung.htm"><span style="font-weight:bold; color:#669933;">Melden Sie sich hier an!</span></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</body>
+</html>

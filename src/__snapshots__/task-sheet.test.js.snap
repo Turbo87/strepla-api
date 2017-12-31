@@ -303,3 +303,67 @@ Object {
   "type": "aat",
 }
 `;
+
+exports[`taskSheet luesse17-long-aat 1`] = `
+Object {
+  "className": "OK",
+  "date": "2017-07-06",
+  "day": 3,
+  "description": "Speed Assigned Area Task (AAT)  361.7 km < D < 615.3 km  (Tmin=04:00)",
+  "distance": null,
+  "maxDistance": 615300,
+  "minDistance": 361700,
+  "minTime": 14400,
+  "turnpoints": Array [
+    Object {
+      "aatRadial1": null,
+      "aatRadial2": null,
+      "aatRadius": null,
+      "course": null,
+      "distance": null,
+      "elevation": 34,
+      "latitude": 52.875,
+      "longitude": 11.197222222222223,
+      "name": "227Start Sued",
+      "number": "227",
+    },
+    Object {
+      "aatRadial1": 0,
+      "aatRadial2": 0,
+      "aatRadius": 30000,
+      "course": 184,
+      "distance": 56200,
+      "elevation": 52,
+      "latitude": 51.86638888888889,
+      "longitude": 11.196388888888889,
+      "name": "215Schoenebeck Za",
+      "number": "215",
+    },
+    Object {
+      "aatRadial1": 0,
+      "aatRadial2": 0,
+      "aatRadius": 45000,
+      "course": 102,
+      "distance": 201400,
+      "elevation": 126,
+      "latitude": 51.85944444444445,
+      "longitude": 14.243888888888888,
+      "name": "247Tschernitz B115Y",
+      "number": "247",
+    },
+    Object {
+      "aatRadial1": null,
+      "aatRadial2": null,
+      "aatRadius": null,
+      "course": 302,
+      "distance": 225300,
+      "elevation": 55,
+      "latitude": 52.87694444444445,
+      "longitude": 11.196944444444444,
+      "name": "231Stendal Borstel",
+      "number": "231",
+    },
+  ],
+  "type": "aat",
+}
+`;
