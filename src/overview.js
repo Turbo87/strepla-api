@@ -6,6 +6,7 @@ const BASE_URL = 'http://strepla.de/scs/Public/overview.aspx';
 
 async function overview(cID) {
   let response = await got(`${BASE_URL}?cID=${cID}`);
+  if (!response.url.match(/overview\.aspx/)) { return null; }
 
   return parseOverviewPage(response.body);
 }
