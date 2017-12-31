@@ -1,14 +1,13 @@
 const fs = require('fs');
+const path = require('path');
 const { parseScoreDay } = require('./score-day');
 
-describe('scoreDay', () => {
-  const TESTS = [
-    'stoelln17-std-day1',
-  ];
+const FIXTURE_PATH = path.join(__dirname, '..', '__fixtures__', 'scores');
 
-  for (let fixtureName of TESTS) {
-    test(fixtureName, () => {
-      let body = fs.readFileSync(`${__dirname}/../__fixtures__/${fixtureName}.html`);
+describe('scoreDay', () => {
+  for (let fileName of fs.readdirSync(FIXTURE_PATH)) {
+    test(fileName.replace(/\.html$/, ''), () => {
+      let body = fs.readFileSync(path.join(FIXTURE_PATH, fileName));
       expect(parseScoreDay(body)).toMatchSnapshot();
     });
   }

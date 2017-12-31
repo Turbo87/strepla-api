@@ -1,12 +1,13 @@
 const fs = require('fs');
+const path = require('path');
 const { parseOverviewPage } = require('./overview');
 
-describe('overview', () => {
-  const TESTS = ['ec17', 'lev17'];
+const FIXTURE_PATH = path.join(__dirname, '..', '__fixtures__', 'overview');
 
-  for (let fixtureName of TESTS) {
-    test(fixtureName, () => {
-      let body = fs.readFileSync(`${__dirname}/../__fixtures__/${fixtureName}-overview.html`);
+describe('overview', () => {
+  for (let fileName of fs.readdirSync(FIXTURE_PATH)) {
+    test(fileName.replace(/\.html$/, ''), () => {
+      let body = fs.readFileSync(path.join(FIXTURE_PATH, fileName));
       expect(parseOverviewPage(body)).toMatchSnapshot();
     });
   }
