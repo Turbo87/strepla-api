@@ -2,6 +2,7 @@ const got = require('got');
 const cheerio = require('cheerio');
 
 const { label } = require('./utils/selectors');
+const { parseDate } = require('./utils/date');
 
 const BASE_URL = 'http://strepla.de/scs/Public/taskSheet.aspx';
 
@@ -18,6 +19,10 @@ async function taskSheet(cID, className, date) {
 function parseTaskSheet(body) {
   let $ = cheerio.load(body);
 
+  let dateText = $('#ctl00_Content_lblDate').text().trim();
+  let date = parseDate(dateText);
+  let day = parseDay(dateText);
+
   let description = $('#ctl00_Content_lblTaskDescription').text().trim();
   let parsedDescription = parseDescription(description);
 
@@ -25,7 +30,18 @@ function parseTaskSheet(body) {
   let $turnpoints = $taskTable.find('tr').slice(1);
   let turnpoints = $turnpoints.map((i, el) => parseTurnpoint($(el))).get();
 
-  return Object.assign({ description, turnpoints }, parsedDescription);
+  return Object.assign({ date, day, description, turnpoints }, parsedDescription);
+}
+
+function parseDay(str) {
+  if (!str) { return null; }
+
+  let match = str.match(/\s(\d+)\. Day/);
+  if (match) {
+    return parseInt(match[1], 10);
+  }
+
+  return null;
 }
 
 function parseDescription(str) {

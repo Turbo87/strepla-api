@@ -1,7 +1,7 @@
 function parseDate(date) {
   if (!date) { return null; }
 
-  let match = date.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  let match = date.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (!match) { return null; }
 
   return `${match[3]}-${pad(match[1])}-${pad(match[2])}`;

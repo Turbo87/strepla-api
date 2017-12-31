@@ -2,6 +2,8 @@
 
 exports[`taskSheet ec17-aat-task 1`] = `
 Object {
+  "date": "2017-06-02",
+  "day": 2,
   "description": "Speed Assigned Area Task (AAT)  122.5 km < D < 244.0 km  (Tmin=02:00)",
   "distance": null,
   "maxDistance": 244000,
@@ -63,6 +65,8 @@ Object {
 
 exports[`taskSheet ec17-aat-task2 1`] = `
 Object {
+  "date": "2017-06-02",
+  "day": 2,
   "description": "Speed Assigned Area Task (AAT)  131.2 km < D < 316.4 km Zeitlimit fehlt!",
   "distance": null,
   "maxDistance": 316400,
@@ -148,6 +152,8 @@ Object {
 
 exports[`taskSheet ec17-racing-task 1`] = `
 Object {
+  "date": "2017-06-05",
+  "day": 3,
   "description": "Racing-Task (RT) 302.2 km",
   "distance": 302200,
   "maxDistance": null,
@@ -233,6 +239,8 @@ Object {
 
 exports[`taskSheet luesse17-aat 1`] = `
 Object {
+  "date": "2017-07-11",
+  "day": 6,
   "description": "Speed Assigned Area Task (AAT)  120.0 km < D < 218.9 km  (Tmin=01:30)",
   "distance": null,
   "maxDistance": 218900,
