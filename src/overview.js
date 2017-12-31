@@ -2,6 +2,7 @@ const URL = require('url').URL;
 const got = require('got');
 const cheerio = require('cheerio');
 
+const { label } = require('./utils/selectors');
 const { parseDate } = require('./utils/date');
 
 const BASE_URL = 'http://strepla.de/scs/Public/overview.aspx';
@@ -29,10 +30,10 @@ function parseOverviewPage(body) {
 
   let days = $('tbody tr', middleFrame).map((i, el) => {
     let $columns = $('td', el);
-    let date = parseDate($columns.eq(0).find('span[id$="lblDate"]').text());
+    let date = parseDate($columns.eq(0).find(label('lblDate')).text());
 
     let results = $columns.slice(1).get().reduce((results, el, i) => {
-      let link = $('a[id$="dayLink"]', el).attr('href') || null;
+      let link = $(label('dayLink'), el).attr('href') || null;
       let idDay = null;
       if (link) {
         link = new URL(link, BASE_URL);

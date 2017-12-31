@@ -1,6 +1,8 @@
 const got = require('got');
 const cheerio = require('cheerio');
 
+const { label } = require('./utils/selectors');
+
 const BASE_URL = 'http://strepla.de/scs/Public/taskSheet.aspx';
 
 const RACING_PREFIX = 'Racing-Task (RT)';
@@ -63,16 +65,16 @@ function parseDescription(str) {
 }
 
 function parseTurnpoint($turnpoint) {
-  let number = $turnpoint.find('[id$="lblNr"]').text().trim();
-  let name = $turnpoint.find('[id$="lblName"]').text().trim();
-  let elevation = parseValue($turnpoint.find('[id$="lblElevation"]').text().trim());
-  let distance = parseValue($turnpoint.find('[id$="lblDist"]').text().trim());
-  let course = parseAngle($turnpoint.find('[id$="lblCourse"]').text().trim());
-  let aatRadial1 = parseAngle($turnpoint.find('[id$="lblAATRadial1"]').text().trim());
-  let aatRadial2 = parseAngle($turnpoint.find('[id$="lblAATRadial2"]').text().trim());
-  let aatRadius = parseValue($turnpoint.find('[id$="lblAATRadius"]').text().trim());
-  let latitude = parseGeoAngle($turnpoint.find('[id$="lblLat"]').text().trim());
-  let longitude = parseGeoAngle($turnpoint.find('[id$="lblLon"]').text().trim());
+  let number = $turnpoint.find(label('lblNr')).text().trim();
+  let name = $turnpoint.find(label('lblName')).text().trim();
+  let elevation = parseValue($turnpoint.find(label('lblElevation')).text().trim());
+  let distance = parseValue($turnpoint.find(label('lblDist')).text().trim());
+  let course = parseAngle($turnpoint.find(label('lblCourse')).text().trim());
+  let aatRadial1 = parseAngle($turnpoint.find(label('lblAATRadial1')).text().trim());
+  let aatRadial2 = parseAngle($turnpoint.find(label('lblAATRadial2')).text().trim());
+  let aatRadius = parseValue($turnpoint.find(label('lblAATRadius')).text().trim());
+  let latitude = parseGeoAngle($turnpoint.find(label('lblLat')).text().trim());
+  let longitude = parseGeoAngle($turnpoint.find(label('lblLon')).text().trim());
 
   return { number, name, elevation, distance, course, aatRadial1, aatRadial2, aatRadius, latitude, longitude };
 }

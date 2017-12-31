@@ -1,6 +1,7 @@
 const got = require('got');
 const cheerio = require('cheerio');
 
+const { label } = require('./utils/selectors');
 const { parseDate } = require('./utils/date');
 
 const BASE_URL = 'http://strepla.de/scs/Public/scoreDay.aspx';
@@ -21,13 +22,13 @@ function parseScoreDay(body) {
   let description = $('#ctl00_lblCompDescription').text().trim();
   let competition = { name, description };
 
-  let date = parseDate($('[id$="lblDate"]', $middleFrame).text().trim());
-  let clazz = $('[id$="lblCompClass"]', $middleFrame).text().trim();
+  let date = parseDate($(label('Date'), $middleFrame).text().trim());
+  let clazz = $(label('CompClass'), $middleFrame).text().trim();
 
   let $validResult = $('[id$="pnlValidResult"]', $middleFrame);
 
-  let taskDescription = $('[id$="lblTaskDescription"]', $validResult).text().trim();
-  let remark = $('[id$="lblRemark"]', $validResult).text().trim();
+  let taskDescription = $(label('TaskDescription'), $validResult).text().trim();
+  let remark = $(label('Remark'), $validResult).text().trim();
 
   let $rows = $validResult.find('table').eq(0).find('tr').slice(1);
   let results = $rows.map((i, el) => parseResult($(el))).get();
@@ -36,33 +37,33 @@ function parseScoreDay(body) {
 }
 
 function parseResult($result) {
-  let rank = $result.find('[id$="lblDayRank"]').text().trim() || null;
+  let rank = $result.find(label('DayRank')).text().trim() || null;
   if (rank) {
     rank = parseInt(rank, 10);
   }
 
-  let competitionId = $result.find('[id$="lblWBK"]').text().trim() || null;
-  let name = $result.find('[id$="lblName"]').text().trim() || null;
-  let country = $result.find('[id$="lblCountry"]').text().trim() || null;
-  let glider = $result.find('[id$="lblGlider"]').text().trim() || null;
-  let taskStartTime = $result.find('[id$="lblStartGate"]').text().trim() || null;
-  let time = parseTime($result.find('[id$="lblTotalTime"]').text());
-  let distance = $result.find('[id$="lblDistTrack"]').text().trim() || null;
+  let competitionId = $result.find(label('WBK')).text().trim() || null;
+  let name = $result.find(label('Name')).text().trim() || null;
+  let country = $result.find(label('Country')).text().trim() || null;
+  let glider = $result.find(label('Glider')).text().trim() || null;
+  let taskStartTime = $result.find(label('StartGate')).text().trim() || null;
+  let time = parseTime($result.find(label('TotalTime')).text());
+  let distance = $result.find(label('DistTrack')).text().trim() || null;
   if (distance) {
     distance = parseFloat(distance);
   }
 
-  let speed = $result.find('[id$="lblvTask"]').text().trim() || null;
+  let speed = $result.find(label('vTask')).text().trim() || null;
   if (speed) {
     speed = parseFloat(speed);
   }
 
-  let penaltyPoints = $result.find('[id$="lblPenlty"]').text().trim() || '0';
+  let penaltyPoints = $result.find(label('Penlty')).text().trim() || '0';
   if (penaltyPoints) {
     penaltyPoints = parseInt(penaltyPoints, 10);
   }
 
-  let points = $result.find('[id$="lblDayPoints"]').text().trim() || null;
+  let points = $result.find(label('DayPoints')).text().trim() || null;
   if (points) {
     points = parseInt(points, 10);
   }
