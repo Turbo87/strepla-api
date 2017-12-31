@@ -78,3 +78,115 @@ Object {
   "name": "17. EuregioCup 2017",
 }
 `;
+
+exports[`overview lev17 1`] = `
+Object {
+  "classes": Array [
+    "Club",
+  ],
+  "days": Array [
+    Object {
+      "date": "2017-07-12",
+      "results": Object {
+        "Club": Object {
+          "idDay": "6115",
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6115",
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-13",
+      "results": Object {
+        "Club": Object {
+          "idDay": "6118",
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6118",
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-14",
+      "results": Object {
+        "Club": Object {
+          "idDay": "6139",
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6139",
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-15",
+      "results": Object {
+        "Club": Object {
+          "idDay": "6148",
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6148",
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-16",
+      "results": Object {
+        "Club": Object {
+          "idDay": null,
+          "link": null,
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-17",
+      "results": Object {
+        "Club": Object {
+          "idDay": "6160",
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6160",
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-18",
+      "results": Object {
+        "Club": Object {
+          "idDay": "6175",
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6175",
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-19",
+      "results": Object {
+        "Club": Object {
+          "idDay": null,
+          "link": null,
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-20",
+      "results": Object {
+        "Club": Object {
+          "idDay": null,
+          "link": null,
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-21",
+      "results": Object {
+        "Club": Object {
+          "idDay": "6205",
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6205",
+        },
+      },
+    },
+    Object {
+      "date": "2017-07-22",
+      "results": Object {
+        "Club": Object {
+          "idDay": null,
+          "link": null,
+        },
+      },
+    },
+  ],
+  "description": "Leverkusen Flugplatz (EDKL) 15.07.2017-22.07.2017",
+  "logoUrl": "http://strepla.de/scs/data/comp_397/data/logo.png",
+  "name": "Junioren-Quali Leverkusen",
+}
+`;

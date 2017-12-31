@@ -2,7 +2,7 @@ const fs = require('fs');
 const { parseOverviewPage } = require('./overview');
 
 describe('overview', () => {
-  const TESTS = ['ec17'];
+  const TESTS = ['ec17', 'lev17'];
 
   for (let fixtureName of TESTS) {
     test(fixtureName, () => {
