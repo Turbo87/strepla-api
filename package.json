@@ -1,0 +1,9 @@
+{
+  "name": "strepla-api",
+  "version": "0.0.0",
+  "description": "scoring*StrePla \"API\" wrapper",
+  "license": "MIT",
+  "author": "Tobias Bieniek <tobias.bieniek@gmail.com>",
+  "main": "index.js",
+  "repository": "https://github.com/Turbo87/strepla-api"
+}
