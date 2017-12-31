@@ -46,7 +46,7 @@ function parseResult($result) {
   let country = $result.find('[id$="lblCountry"]').text().trim() || null;
   let glider = $result.find('[id$="lblGlider"]').text().trim() || null;
   let taskStartTime = $result.find('[id$="lblStartGate"]').text().trim() || null;
-  let time = $result.find('[id$="lblTotalTime"]').text().trim() || null;
+  let time = parseTime($result.find('[id$="lblTotalTime"]').text());
   let distance = $result.find('[id$="lblDistTrack"]').text().trim() || null;
   if (distance) {
     distance = parseFloat(distance);
@@ -68,6 +68,17 @@ function parseResult($result) {
   }
 
   return { rank, competitionId, name, country, glider, taskStartTime, time, distance, speed, penaltyPoints, points };
+}
+
+function parseTime(str) {
+  if (!str) { return null; }
+
+  let match = str.trim().match(/^(\d+):(\d+):(\d+)/);
+  if (match) {
+    return parseInt(match[1]) * 3600 + parseInt(match[2]) * 60 + parseInt(match[3])
+  }
+
+  return null;
 }
 
 module.exports = { scoreDay, parseScoreDay };
