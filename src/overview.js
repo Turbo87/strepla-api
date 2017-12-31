@@ -2,6 +2,8 @@ const URL = require('url').URL;
 const got = require('got');
 const cheerio = require('cheerio');
 
+const { parseDate } = require('./utils/date');
+
 const BASE_URL = 'http://strepla.de/scs/Public/overview.aspx';
 
 async function overview(cID) {
@@ -48,15 +50,6 @@ function parseOverviewPage(body) {
   }).get();
 
   return { name, description, logoUrl, classes, days };
-}
-
-function parseDate(date) {
-  if (!date) { return null; }
-
-  let match = date.match(/(\d{2}).(\d{2}).(\d{4})/);
-  if (!match) { return null; }
-
-  return `${match[3]}-${match[2]}-${match[1]}`;
 }
 
 module.exports = { overview, parseOverviewPage };
