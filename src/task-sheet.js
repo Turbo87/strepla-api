@@ -23,6 +23,8 @@ function parseTaskSheet(body) {
   let date = parseDate(dateText);
   let day = parseDay(dateText);
 
+  let className = $('#ctl00_Content_lblClassName').text().trim();
+
   let description = $('#ctl00_Content_lblTaskDescription').text().trim();
   let parsedDescription = parseDescription(description);
 
@@ -30,7 +32,7 @@ function parseTaskSheet(body) {
   let $turnpoints = $taskTable.find('tr').slice(1);
   let turnpoints = $turnpoints.map((i, el) => parseTurnpoint($(el))).get();
 
-  return Object.assign({ date, day, description, turnpoints }, parsedDescription);
+  return Object.assign({ date, day, className, description, turnpoints }, parsedDescription);
 }
 
 function parseDay(str) {
