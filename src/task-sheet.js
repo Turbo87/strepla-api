@@ -79,19 +79,19 @@ function parseTurnpoint($turnpoint) {
   return { number, name, elevation, distance, course, aatRadial1, aatRadial2, aatRadius, latitude, longitude };
 }
 
-const VALUE_CONVERSIONS = [
-  [/^(\d+(?:\.\d+)?) m$/, match => parseFloat(match[1])],
-  [/^(\d+(?:\.\d+)?) km$/, match => parseFloat(match[1]) * 1000],
-];
+const UNIT_CONVERSIONS = {
+  'm': it => it,
+  'km': it => it * 1000,
+};
 
 function parseValue(str) {
   if (!str) { return null; }
 
-  for (let [re, fn] of VALUE_CONVERSIONS) {
-    let match = str.match(re);
-    if (match) {
-      return fn(match);
-    }
+  let match = str.match(/^(\d+(?:\.\d+)?) (m|km)$/);
+  if (match) {
+    let value = parseFloat(match[1]);
+    let unit = match[2];
+    return UNIT_CONVERSIONS[unit](value);
   }
 
   return null;
