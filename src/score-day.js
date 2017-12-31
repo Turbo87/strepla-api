@@ -1,5 +1,6 @@
 const got = require('got');
 const cheerio = require('cheerio');
+const URL = require('url').URL;
 
 const { label } = require('./utils/selectors');
 const regexParse = require('./utils/regex');
@@ -45,6 +46,17 @@ function parseResult($result) {
 
   let competitionId = $result.find(label('WBK')).text().trim() || null;
   let name = $result.find(label('Name')).text().trim() || null;
+
+  let igcFileLink = $result.find('a[href^="igcFile.aspx"]').attr('href') || null;
+  let idResult = null;
+  if (igcFileLink) {
+    igcFileLink = new URL(igcFileLink, BASE_URL);
+    idResult = igcFileLink.searchParams.get('idResult') || null;
+    if (idResult) {
+      idResult = parseInt(idResult, 10);
+    }
+  }
+
   let country = $result.find(label('Country')).text().trim() || null;
   let glider = $result.find(label('Glider')).text().trim() || null;
   let taskStartTime = $result.find(label('StartGate')).text().trim() || null;
@@ -69,7 +81,7 @@ function parseResult($result) {
     points = parseInt(points, 10);
   }
 
-  return { rank, competitionId, name, country, glider, taskStartTime, time, distance, speed, penaltyPoints, points };
+  return { rank, competitionId, name, igcFileLink, idResult, country, glider, taskStartTime, time, distance, speed, penaltyPoints, points };
 }
 
 function parseTime(str) {
