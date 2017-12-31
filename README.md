@@ -26,7 +26,7 @@ const { overview, scoreDay } = require('strepla-api');
   // -> http://strepla.de/scs/Public/overview.aspx?cId=388 in JSON form
 
   let idDay = 5701;
-  let d = await overview(cID, idDay);
+  let d = await scoreDay(cID, idDay);
   // -> http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5701 in JSON form
 })();
 ```
