@@ -2,6 +2,11 @@
 
 exports[`taskSheet ec17-aat-task 1`] = `
 Object {
+  "description": "Speed Assigned Area Task (AAT)  122.5 km < D < 244.0 km  (Tmin=02:00)",
+  "distance": null,
+  "maxDistance": 244000,
+  "minDistance": 122500,
+  "minTime": 7200,
   "turnpoints": Array [
     Object {
       "aatRadial1": null,
@@ -52,11 +57,17 @@ Object {
       "number": "118",
     },
   ],
+  "type": "aat",
 }
 `;
 
 exports[`taskSheet ec17-aat-task2 1`] = `
 Object {
+  "description": "Speed Assigned Area Task (AAT)  131.2 km < D < 316.4 km Zeitlimit fehlt!",
+  "distance": null,
+  "maxDistance": 316400,
+  "minDistance": 131200,
+  "minTime": null,
   "turnpoints": Array [
     Object {
       "aatRadial1": null,
@@ -131,11 +142,17 @@ Object {
       "number": "118",
     },
   ],
+  "type": "aat",
 }
 `;
 
 exports[`taskSheet ec17-racing-task 1`] = `
 Object {
+  "description": "Racing-Task (RT) 302.2 km",
+  "distance": 302200,
+  "maxDistance": null,
+  "minDistance": null,
+  "minTime": null,
   "turnpoints": Array [
     Object {
       "aatRadial1": null,
@@ -210,5 +227,6 @@ Object {
       "number": "118",
     },
   ],
+  "type": "racing",
 }
 `;
