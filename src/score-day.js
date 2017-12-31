@@ -55,7 +55,7 @@ function parseResult($result) {
 
   let speed = $result.find(label('vTask')).text().trim() || null;
   if (speed) {
-    speed = parseFloat(speed);
+    speed = parseFloat(speed) / 3.6;
   }
 
   let penaltyPoints = $result.find(label('Penlty')).text().trim() || '0';
