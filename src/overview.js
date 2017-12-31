@@ -26,7 +26,7 @@ function parseOverviewPage(body) {
 
   let days = $('tbody tr', middleFrame).map((i, el) => {
     let $columns = $('td', el);
-    let date = $columns.eq(0).find('span[id$="lblDate"]').text();
+    let date = parseDate($columns.eq(0).find('span[id$="lblDate"]').text());
 
     let results = $columns.slice(1).get().reduce((results, el, i) => {
       let link = $('a[id$="dayLink"]', el).attr('href') || null;
@@ -44,6 +44,15 @@ function parseOverviewPage(body) {
   }).get();
 
   return { name, description, logoUrl, classes, days };
+}
+
+function parseDate(date) {
+  if (!date) { return null; }
+
+  let match = date.match(/(\d{2}).(\d{2}).(\d{4})/);
+  if (!match) { return null; }
+
+  return `${match[3]}-${match[2]}-${match[1]}`;
 }
 
 module.exports = { overview, parseOverviewPage };

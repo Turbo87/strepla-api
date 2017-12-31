@@ -8,7 +8,7 @@ Object {
   ],
   "days": Array [
     Object {
-      "date": "01.06.2017",
+      "date": "2017-06-01",
       "results": Object {
         "Hasen": Object {
           "idDay": "5680",
@@ -21,7 +21,7 @@ Object {
       },
     },
     Object {
-      "date": "02.06.2017",
+      "date": "2017-06-02",
       "results": Object {
         "Hasen": Object {
           "idDay": "5701",
@@ -34,7 +34,7 @@ Object {
       },
     },
     Object {
-      "date": "03.06.2017",
+      "date": "2017-06-03",
       "results": Object {
         "Hasen": Object {
           "idDay": null,
@@ -47,7 +47,7 @@ Object {
       },
     },
     Object {
-      "date": "04.06.2017",
+      "date": "2017-06-04",
       "results": Object {
         "Hasen": Object {
           "idDay": null,
@@ -60,7 +60,7 @@ Object {
       },
     },
     Object {
-      "date": "05.06.2017",
+      "date": "2017-06-05",
       "results": Object {
         "Hasen": Object {
           "idDay": "5794",
