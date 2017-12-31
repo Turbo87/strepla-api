@@ -1,25 +1,9 @@
-const assert = require('assert');
-const URL = require('url').URL;
 const got = require('got');
 const cheerio = require('cheerio');
 
 const { parseDate } = require('./utils/date');
 
 const BASE_URL = 'http://strepla.de/scs/Public/scoreDay.aspx';
-
-const EXPECTED_COLUMNS = [
-  '#',
-  'CID',
-  'Name',
-  'Country',
-  'Glider',
-  'Departure [hh:mm:ss]',
-  'Time [hh:mm:ss]',
-  'Task [km]',
-  'Speed [km/h]',
-  'Penalty',
-  'Points',
-];
 
 async function scoreDay(cID, idDay) {
   let response = await got(`${BASE_URL}?cID=${cID}&idDay=${idDay}&lang=en-US`);
@@ -83,10 +67,6 @@ function parseScoreDay(body) {
 
   return {
     competition, date, 'class': clazz, taskDescription, remark, results };
-}
-
-function collapseWhitespace(str) {
-  return str.replace(/[ \t\r\n]+/g, ' ');
 }
 
 module.exports = { scoreDay, parseScoreDay };
