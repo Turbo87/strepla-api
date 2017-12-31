@@ -17,3 +17,12 @@ install:
 
 script:
   - yarn test
+
+deploy:
+  provider: npm
+  email: tobias.bieniek@gmx.de
+  api_key:
+    secure: TD/Wp5c1VvXbK5ONM9ybHc8oigCqLY+v6QTOv2OqddERm8WFhDt9aE2dWCMkllivJyQDsmI9JW+pz+YMUDwonv/NL8LwXDfzGzy+fG4SfkhFHZaS6WD6MsDsjkxDT3yrlSkHa7AdGwB6lGgws2ONguW/37QamAN7bS0PRNhcJ0vXZjyt51mkfw4OFP+9utA400jGrBufiVCKdfspAUZERHeFQ5HMHzACn46jyLw35ThkzQMCp4reZwJbnXyFGUbDo5jjJCUr5PgBxlcbAMYtORXjY2+g2zpTjjAOTRIoBapb6GfXQhz7KgBdVTb2eFxYqrV/4HWKwX5NKSfUSeMd/BQzjT+gIsF5Fy4/3x1gNxcps95wNc2twbKnQQx7n+McoSg1du2mkD853LNgCMzcG2GBPO/OaR84sH7tarKSQnlp1c7BPK+AjbY0YmS2yDYenLqhxtTlGFVR6ByvZb7MG1cLECxisleQuW0VgvVRTKIx0YKotDMBlt6/mJrI4gOo4iiR3fODRU2Yqx3QjuvyKRCIurf1IsOIXJb8cOOHeYVXgXj+rxLbMQDA2v2TPWGkAMZHEI+YrB74al9NAbVqDVHmXNeojegc5d9sBCte4StPPgrnmDeSlwcrwWu0MFzQbpPYmlm1aPJO8Rhhfvm2BOj5AErKORWFeWedp79AoqA=
+  on:
+    tags: true
+    repo: Turbo87/strepla-api
