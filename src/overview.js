@@ -7,7 +7,7 @@ const { parseDate } = require('./utils/date');
 const BASE_URL = 'http://strepla.de/scs/Public/overview.aspx';
 
 async function overview(cID) {
-  let response = await got(`${BASE_URL}?cID=${cID}`);
+  let response = await got(`${BASE_URL}?cID=${cID}&lang=en-US`);
   if (!response.url.match(/overview\.aspx/)) { return null; }
 
   return parseOverviewPage(response.body);

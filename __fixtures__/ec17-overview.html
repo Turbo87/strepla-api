@@ -4,543 +4,543 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml">
 
-<head><title>
-    scoring*StrePla Übersicht
+	<head><title>
+	scoring*StrePla Übersicht
 </title>
 
-    <script type="text/javascript" src="/scs/scripts/jquery-2.1.3.min.js"></script>
-    <script type="text/javascript" src="/scs/scripts/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="/scs/scripts/URI.min.js"></script>
-    <script type="text/javascript" src="/scs/scripts/util.js"></script>
-    <script type="text/javascript" src="/scs/scripts/jqUtil.js"></script>
+		<script type="text/javascript" src="/scs/scripts/jquery-2.1.3.min.js"></script>
+		<script type="text/javascript" src="/scs/scripts/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="/scs/scripts/URI.min.js"></script>
+    	<script type="text/javascript" src="/scs/scripts/util.js"></script>
+    	<script type="text/javascript" src="/scs/scripts/jqUtil.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="../scripts/jquery-ui.min.css" /><link rel="stylesheet" type="text/css" href="../css/default.css" /><link rel="stylesheet" type="text/css" href="../css/masterPage.css" />
+		<link rel="stylesheet" type="text/css" href="../scripts/jquery-ui.min.css" /><link rel="stylesheet" type="text/css" href="../css/default.css" /><link rel="stylesheet" type="text/css" href="../css/masterPage.css" />
 
-    <script type="text/javascript">
+		<script type="text/javascript">
 
-      var isMobile = {
-        // http://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
-        Android: function () {
-          return navigator.userAgent.match(/Android/i);
-        },
-        BlackBerry: function () {
-          return navigator.userAgent.match(/BlackBerry/i);
-        },
-        iOS: function () {
-          return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-        },
-        Opera: function () {
-          return navigator.userAgent.match(/Opera Mini/i);
-        },
-        Windows: function () {
-          return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
-        },
-        any: function () {
-          return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
-        }
-      };
+		    var isMobile = {
+		        // http://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
+		        Android: function () {
+		            return navigator.userAgent.match(/Android/i);
+		        },
+		        BlackBerry: function () {
+		            return navigator.userAgent.match(/BlackBerry/i);
+		        },
+		        iOS: function () {
+		            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+		        },
+		        Opera: function () {
+		            return navigator.userAgent.match(/Opera Mini/i);
+		        },
+		        Windows: function () {
+		            return navigator.userAgent.match(/IEMobile/i) || navigator.userAgent.match(/WPDesktop/i);
+		        },
+		        any: function () {
+		            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+		        }
+		    };
 
 
-      function calcLayout()
-      {
-        var mainFrame = $("#master_frame");
-        var leftFrame = $("#left_frame");
-        var middleFrame = $("#middle_frame");
-        middleFrame.width(mainFrame.width() - leftFrame.width() - 4);
-      }
-
-      $(window).resize(function () {
-        calcLayout();
-      });
-
-      function showLoginPanel(url) {
-        $("#content_login").dialog("open");
-      }
-
-      function onLoginSubmit()
-      {
-        $.ajax(
-          {
-            type: "POST",
-            url: "/scs/ws/validateUser.ashx",
-            data: { cmd: "validate", username: $("#username").val(), pwd: $("#password").val() },
-            success: function (xmlResponse, status) {
-              var status = false;
-              $(xmlResponse).find('status').each(function () {
-                status = ($(this).text() === 'True');
-              });
-
-              if (status == true) {
-                $(xmlResponse).find('url').each(function () {
-                  var url = $(this).text();
-                  if (url != "") {
-                    window.location.href = $(this).text();
-                    return;
-                  }
-                });
-              } else {
-                $(xmlResponse).find('msg').each(function () {
-                  $("#errMsg").html($(this).text());
-                });
-              }
-            },
-            error: function (xmlResponse, status, errorThrown) {
-              $("#errMsg").html('Error login: ' + errorThrown);
+		    function calcLayout()
+		    {
+		        var mainFrame = $("#master_frame");
+		        var leftFrame = $("#left_frame");
+		        var middleFrame = $("#middle_frame");
+		        middleFrame.width(mainFrame.width() - leftFrame.width() - 4);
             }
 
-          });
-        return false;
-      }
+		    $(window).resize(function () {
+		        calcLayout();
+		    });
 
-      $(document).ready(function () {
+			function showLoginPanel(url) {
+				$("#content_login").dialog("open");
+			}
 
-        // check for mobile device
-        var params = getUrlVars();
-        var mode = $.trim(decodeURIComponent(params["mode"]));
-        // if (mode != 'desktop') {
-        //     console.log('isMobile ' + isMobile.any());
-        //     if (isMobile.any()) {
-        //         urlMobile = "/scs/mobile/index.html";
-        //         window.location = urlMobile;
-        //     }
-        // }
+			function onLoginSubmit()
+			{
+			    $.ajax(
+                {
+                    type: "POST",
+                    url: "/scs/ws/validateUser.ashx",
+                    data: { cmd: "validate", username: $("#username").val(), pwd: $("#password").val() },
+                    success: function (xmlResponse, status) {
+                        var status = false;
+                        $(xmlResponse).find('status').each(function () {
+                            status = ($(this).text() === 'True');
+                        });
 
-        $("#content_login").dialog({
-          autoOpen: false,
-          width:300,
-          modal:true,
-          resizeable:false,
-          title: "Login",
-          position: {
-            my: 'right top',
-            at: 'right bottom',
-            of: $('#idSignIn')
-          }
+                        if (status == true) {
+                            $(xmlResponse).find('url').each(function () {
+                                var url = $(this).text();
+                                if (url != "") {
+                                    window.location.href = $(this).text();
+                                    return;
+                                }
+                            });
+                        } else {
+                            $(xmlResponse).find('msg').each(function () {
+                                $("#errMsg").html($(this).text());
+                            });
+                        }
+                    },
+                    error: function (xmlResponse, status, errorThrown) {
+                        $("#errMsg").html('Error login: ' + errorThrown);
+                    }
 
-        });
-        $("#content_login").keydown(function (event) {
-          if (event.keyCode == 13) {
-            onLoginSubmit();
-            return false;
-          }
-        });
+                });
+			    return false;
+			}
 
-        var uri = new URI(window.location);
-        var fnPage = uri.filename();
-        // console.log("URI: " + uri + " fn: " + fnPage);
+			$(document).ready(function () {
 
-        if ($("#public_toolbar").length > 0) {
+                // check for mobile device
+			    var params = getUrlVars();
+			    var mode = $.trim(decodeURIComponent(params["mode"]));
+			    // if (mode != 'desktop') {
+			    //     console.log('isMobile ' + isMobile.any());
+			    //     if (isMobile.any()) {
+			    //         urlMobile = "/scs/mobile/index.html";
+			    //         window.location = urlMobile;
+			    //     }
+			    // }
 
-          $("#public_toolbar div").each(function (index) {
+				$("#content_login").dialog({
+					autoOpen: false,
+					width:300,
+					modal:true,
+					resizeable:false,
+					title: "Login",
+					position: {
+					    my: 'right top',
+					    at: 'right bottom',
+					    of: $('#idSignIn')
+					}
 
-            var uriItem = new URI($(this).find("a").attr("href"));
-            uriItem = uriItem.filename();
-            // console.log("uriItem: " + uriItem);
-            if (uriItem == fnPage) {
-              $(this).addClass("public_item_selected");
-            }
+				});
+				$("#content_login").keydown(function (event) {
+				    if (event.keyCode == 13) {
+				        onLoginSubmit();
+				        return false;
+				    }
+				});
 
-            $(this).hover(function () {
-              $(this).toggleClass("public_item_hover");
-            });
+				var uri = new URI(window.location);
+				var fnPage = uri.filename();
+				// console.log("URI: " + uri + " fn: " + fnPage);
 
-            $(this).click(function () {
-              window.location.href = $(this).find("a").attr("href");
-            });
+				if ($("#public_toolbar").length > 0) {
 
-          });
-        }
+					$("#public_toolbar div").each(function (index) {
 
-        $(".local_item").each(function (index) {
+						var uriItem = new URI($(this).find("a").attr("href"));
+						uriItem = uriItem.filename();
+						// console.log("uriItem: " + uriItem);
+						if (uriItem == fnPage) {
+							$(this).addClass("public_item_selected");
+						}
 
-          var curPage = $(".local_toolbar").attr("page"); ;
-          var curItem = $(this).find("a").attr("id");
+						$(this).hover(function () {
+							$(this).toggleClass("public_item_hover");
+						});
+
+						$(this).click(function () {
+						    window.location.href = $(this).find("a").attr("href");
+						});
+
+					});
+				}
+
+				$(".local_item").each(function (index) {
+
+					var curPage = $(".local_toolbar").attr("page"); ;
+					var curItem = $(this).find("a").attr("id");
 //					console.log(" curPage " + curPage + " curItem " + curItem);
-          if (typeof curItem != 'undefined' && curItem.indexOf(curPage) != -1) {
-            $(this).addClass("local_item_selected");
-          }
+					if (typeof curItem != 'undefined' && curItem.indexOf(curPage) != -1) {
+						$(this).addClass("local_item_selected");
+					}
 
-          var href = $(this).find("a").attr("href");
-          if (typeof href != 'undefined') {
-            $(this).click(function () {
-              if (typeof href != 'undefined') {
-                //console.log("click " + href);
-                window.location.href=href;
-                return false;
-              }
-            });
-          }
-        });
+					var href = $(this).find("a").attr("href");
+					if (typeof href != 'undefined') {
+						$(this).click(function () {
+							if (typeof href != 'undefined') {
+								//console.log("click " + href);
+							    window.location.href=href;
+								return false;
+							}
+						});
+					}
+				});
 
-        $(".local_item_metro").each(function (index) {
+				$(".local_item_metro").each(function (index) {
 
-          var curPage = $(".local_toolbar_metro").attr("page");;
-          var curItem = $(this).find("a").attr("id");
-          console.log("link: " + curItem);
-          // HACK, remove link to map display
-          if (typeof curItem != 'undefined' && curItem.indexOf("lnkMap") > -1) {
-            // $(this).hide();
-          }
-          // HACK, remove link to map display
+				    var curPage = $(".local_toolbar_metro").attr("page");;
+				    var curItem = $(this).find("a").attr("id");
+				    console.log("link: " + curItem);
+                    // HACK, remove link to map display
+				    if (typeof curItem != 'undefined' && curItem.indexOf("lnkMap") > -1) {
+				        // $(this).hide();
+				    }
+					// HACK, remove link to map display
 
-          var selectedItem = false;
-          if (typeof curItem != 'undefined' && curItem.indexOf(curPage) != -1) {
-            selectedItem = true;
-            $(this).addClass("item_metro_selected");
-          }
+				    var selectedItem = false;
+				    if (typeof curItem != 'undefined' && curItem.indexOf(curPage) != -1) {
+				        selectedItem = true;
+				        $(this).addClass("item_metro_selected");
+				    }
 
-          var href = $(this).find("a").attr("href");
-          var target = $(this).find("a").attr("target");
-          if (typeof href != 'undefined' && selectedItem == false) {
-            $(this).click(function () {
-              if (typeof href != 'undefined') {
-                //console.log("click " + href);
-                if (target == '_blank') {
-                  var win = window.open(href, '_blank');
-                } else {
-                  window.location.href = href;
-                }
-                return false;
-              }
-            });
-          }
-        });
+				    var href = $(this).find("a").attr("href");
+				    var target = $(this).find("a").attr("target");
+				    if (typeof href != 'undefined' && selectedItem == false) {
+				        $(this).click(function () {
+				            if (typeof href != 'undefined') {
+				                //console.log("click " + href);
+				                if (target == '_blank') {
+				                    var win = window.open(href, '_blank');
+				                } else {
+                                    window.location.href = href;
+				                }
+				                return false;
+				            }
+				        });
+				    }
+				});
 
-        calcLayout();
-      });
+				calcLayout();
+			});
 
-    </script>
+		</script>
 
-    <style type="text/css">
+		<style type="text/css">
 
-        .public_item_hover a:hover {
-            text-decoration:none;
-        }
+			.public_item_hover a:hover {
+				text-decoration:none;
+			}
 
-        #idSignIn
-        {
-            cursor: pointer;
-        }
+			#idSignIn
+			{
+				cursor: pointer;
+			}
 
-    </style>
+		</style>
 
 
 
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $(".std_select_item").each(function (index) {
-          $(this).click(function () {
-            var href = $(this).find("a").attr("href");
-            if (typeof href != 'undefined') {
-              //console.log("click " + href);
-              window.location.href = href;
-              return false;
-            }
-          });
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$(".std_select_item").each(function (index) {
+				$(this).click(function () {
+					var href = $(this).find("a").attr("href");
+					if (typeof href != 'undefined') {
+						//console.log("click " + href);
+						window.location.href = href;
+						return false;
+					}
+				});
 
-        });
-      });
-    </script>
+			});
+		});
+	</script>
 </head>
 
-<body>
-<form name="aspnetForm" method="post" action="#" id="aspnetForm" autocomplete="on">
-    <div>
-        <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
-    </div>
+	<body>
+	    <form name="aspnetForm" method="post" action="#" id="aspnetForm" autocomplete="on">
+<div>
+<input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="" />
+</div>
 
 
-    <div id="banner">
-        <a id="ctl00_lnkMain" href="../default.aspx"><img src="../img/scsBanner.jpg" id="ctl00_logo" title="scoring*StrePla" /></a>
+			<div id="banner">
+				<a id="ctl00_lnkMain" href="../default.aspx"><img src="../img/scsBanner.jpg" id="ctl00_logo" title="scoring*StrePla" /></a>
 
-        <div id="top_navigation_left">
-            <span id="ctl00_lblDate">31.12.2017 07:16:51</span>
-        </div>
+				<div id="top_navigation_left">
+					<span id="ctl00_lblDate">12/31/2017 9:06:02 AM</span>
+				</div>
 
-        <div id="top_navigation_right">
-            <div style="position:absolute; right:0px; top:-12px;">
-                <a href="http://strepla.de/scs/Public/overview.aspx?cID=388&lang=de-DE" id="ctl00_de_DE">
-                    <img src="../img/de.png" id="ctl00_img_de" alt="Deutsch" />
-                </a>
-                <a href="http://strepla.de/scs/Public/overview.aspx?cID=388&lang=en-US" id="ctl00_en_US">
-                    <img src="../img/us.png" id="ctl00_img_us" alt="English" />
-                </a>
-            </div>
+				<div id="top_navigation_right">
+					<div style="position:absolute; right:0px; top:-12px;">
+						<a href="http://strepla.de/scs/Public/overview.aspx?cId=388&idDay=5794&lang=de-DE" id="ctl00_de_DE">
+							<img src="../img/de.png" id="ctl00_img_de" alt="Deutsch" />
+						</a>
+						<a href="http://strepla.de/scs/Public/overview.aspx?cId=388&idDay=5794&lang=en-US" id="ctl00_en_US">
+							<img src="../img/us.png" id="ctl00_img_us" alt="English" />
+						</a>
+					</div>
 
-            <a href="../etc/about.aspx" id="ctl00_A3">Über scoring*StrePla</a>
-            <a href="../etc/content_policy.aspx" id="ctl00_A1">Nutzungsbedingungen</a>
-            <a href="../etc/impressum.aspx" id="ctl00_A2">Impressum</a>
-            <a id="idSignIn" onclick="showLoginPanel();">Anmelden</a>
-        </div>
-    </div>
+					<a href="../etc/about.aspx" id="ctl00_A3">Info scoring*StrePla</a>
+					<a href="../etc/content_policy.aspx" id="ctl00_A1">Terms of service</a>
+					<a href="../etc/impressum.aspx" id="ctl00_A2">About</a>
+					<a id="idSignIn" onclick="showLoginPanel();">Sign on</a>
+				</div>
+			</div>
 
-    <div id="ctl00_pnlToolbar">
+			<div id="ctl00_pnlToolbar">
 
-        <div id="public_toolbar">
-            <div class="public_item">
-                <a href="overview.aspx?cID=388" id="ctl00_overview">Übersicht Ergebnisse</a>
-            </div>
-            <div class="public_item">
-                <a href="competitor.aspx?cID=388" id="ctl00_competitor">Teilnehmer</a>
-            </div>
-            <div  class="public_item">
-                <a href="downloads.aspx?cID=388" id="ctl00_downloads">Wettbewerbsdaten</a>
-            </div>
-        </div>
+				<div id="public_toolbar">
+					<div class="public_item">
+						<a href="overview.aspx?cID=388" id="ctl00_overview">Results</a>
+					</div>
+					<div class="public_item">
+						<a href="competitor.aspx?cID=388" id="ctl00_competitor">Competitors</a>
+					</div>
+					<div  class="public_item">
+						<a href="downloads.aspx?cID=388" id="ctl00_downloads">Competition Data</a>
+					</div>
+				</div>
 
-    </div>
+</div>
 
-    <div id="master_frame">
+			<div id="master_frame">
 
-        <div id="left_frame">
-            <a id="ctl00_lnkComp" target="_blank">
-                <img id="ctl00_logoComp" src="/scs/data/comp_388/data/logo.png" style="border-width:0px;width:162px;" /><br />
-            </a>
+				<div id="left_frame">
+					<a id="ctl00_lnkComp" target="_blank">
+						<img id="ctl00_logoComp" src="/scs/data/comp_388/data/logo.png" style="border-width:0px;width:162px;" /><br />
+					</a>
 
 
 
-            <div id="left_frame_content">
+					<div id="left_frame_content">
 
 
 
-            </div>
-        </div>
+					</div>
+				</div>
 
-        <div id="middle_frame">
+				<div id="middle_frame">
 
-            <div id="myTitleElement">
+					<div id="myTitleElement">
 
-            </div>
+					</div>
 
-            <div id="public_contest_info">
-                <div class="h1"><span id="ctl00_lblCompName">17. EuregioCup 2017</span></div>
-                <span id="ctl00_lblCompDescription" class="h2">Aachen Merzbrück (EDKA) 01.06.2017-05.06.2017</span>
-            </div>
+					<div id="public_contest_info">
+						<div class="h1"><span id="ctl00_lblCompName">17. EuregioCup 2017</span></div>
+						<span id="ctl00_lblCompDescription" class="h2">Aachen Merzbrück (EDKA) 6/1/2017-6/5/2017</span>
+					</div>
 
-            <div class="">
+					<div class="">
 
 
-                <div style="width:750px; margin-top:20px; margin-left:20px">
+	<div style="width:750px; margin-top:20px; margin-left:20px">
 
 
-                    <table class="std std_alternating" style="">
-                        <thead>
-                        <tr class="std_head">
-                            <td style="width:120px">
-                                Datum
-                            </td>
-                            <!-- variable number of colums -->
+			<table class="std std_alternating" style="">
+			<thead>
+				<tr class="std_head">
+					<td style="width:120px">
+                        Date
+					</td>
+					<!-- variable number of colums -->
 
-                            <td style="width:170px">
-                                Hasen
-                            </td>
+							<td style="width:170px">
+								Hasen
+							</td>
 
-                            <td style="width:170px">
-                                Igel
-                            </td>
+							<td style="width:170px">
+								Igel
+							</td>
 
-                        </tr>
-                        </thead>
+				</tr>
+			</thead>
 
-                        <tr>
-                            <td class="h5">
-                                <span id="ctl00_Content_dayList_ctl01_lblDay">Tag 1</span>,<br />
-                                <span id="ctl00_Content_dayList_ctl01_lblWeekDay">Do</span>
-                                <span id="ctl00_Content_dayList_ctl01_lblDate">01.06.2017</span>
-                            </td>
+			<tr>
+				<td class="h5">
+					<span id="ctl00_Content_dayList_ctl01_lblDay">Day 1</span>,<br />
+					<span id="ctl00_Content_dayList_ctl01_lblWeekDay">Thu</span>
+					<span id="ctl00_Content_dayList_ctl01_lblDate">6/1/2017</span>
+				</td>
 
-                            <!-- vaiable number of colums -->
+				<!-- vaiable number of colums -->
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
-                                <div id="ctl00_Content_dayList_ctl01_compListData_ctl00_pnlLink" class="std_select_item" style="width:100%">
-                                    <a href="scoreDay.aspx?cId=388&idDay=5680" id="ctl00_Content_dayList_ctl01_compListData_ctl00_dayLink"><span id="ctl00_Content_dayList_ctl01_compListData_ctl00_dayLinkText">Endgültige Wertung</span></asp></a>
-                                </div>
+							<div id="ctl00_Content_dayList_ctl01_compListData_ctl00_pnlLink" class="std_select_item" style="width:100%">
+								<a href="scoreDay.aspx?cId=388&idDay=5680" id="ctl00_Content_dayList_ctl01_compListData_ctl00_dayLink"><span id="ctl00_Content_dayList_ctl01_compListData_ctl00_dayLinkText">Final scoring</span></asp></a>
+							</div>
 
 
-                            </td>
+						</td>
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
-                                <div id="ctl00_Content_dayList_ctl01_compListData_ctl01_pnlLink" class="std_select_item" style="width:100%">
-                                    <a href="scoreDay.aspx?cId=388&idDay=5698" id="ctl00_Content_dayList_ctl01_compListData_ctl01_dayLink"><span id="ctl00_Content_dayList_ctl01_compListData_ctl01_dayLinkText">Endgültige Wertung</span></asp></a>
-                                </div>
+							<div id="ctl00_Content_dayList_ctl01_compListData_ctl01_pnlLink" class="std_select_item" style="width:100%">
+								<a href="scoreDay.aspx?cId=388&idDay=5698" id="ctl00_Content_dayList_ctl01_compListData_ctl01_dayLink"><span id="ctl00_Content_dayList_ctl01_compListData_ctl01_dayLinkText">Final scoring</span></asp></a>
+							</div>
 
 
-                            </td>
+						</td>
 
 
-                        </tr>
+			</tr>
 
-                        <tr>
-                            <td class="h5">
-                                <span id="ctl00_Content_dayList_ctl02_lblDay">Tag 2</span>,<br />
-                                <span id="ctl00_Content_dayList_ctl02_lblWeekDay">Fr</span>
-                                <span id="ctl00_Content_dayList_ctl02_lblDate">02.06.2017</span>
-                            </td>
+			<tr>
+				<td class="h5">
+					<span id="ctl00_Content_dayList_ctl02_lblDay">Day 2</span>,<br />
+					<span id="ctl00_Content_dayList_ctl02_lblWeekDay">Fri</span>
+					<span id="ctl00_Content_dayList_ctl02_lblDate">6/2/2017</span>
+				</td>
 
-                            <!-- vaiable number of colums -->
+				<!-- vaiable number of colums -->
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
-                                <div id="ctl00_Content_dayList_ctl02_compListData_ctl00_pnlLink" class="std_select_item" style="width:100%">
-                                    <a href="scoreDay.aspx?cId=388&idDay=5701" id="ctl00_Content_dayList_ctl02_compListData_ctl00_dayLink"><span id="ctl00_Content_dayList_ctl02_compListData_ctl00_dayLinkText">Endgültige Wertung</span></asp></a>
-                                </div>
+							<div id="ctl00_Content_dayList_ctl02_compListData_ctl00_pnlLink" class="std_select_item" style="width:100%">
+								<a href="scoreDay.aspx?cId=388&idDay=5701" id="ctl00_Content_dayList_ctl02_compListData_ctl00_dayLink"><span id="ctl00_Content_dayList_ctl02_compListData_ctl00_dayLinkText">Final scoring</span></asp></a>
+							</div>
 
 
-                            </td>
+						</td>
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
-                                <div id="ctl00_Content_dayList_ctl02_compListData_ctl01_pnlLink" class="std_select_item" style="width:100%">
-                                    <a href="scoreDay.aspx?cId=388&idDay=5710" id="ctl00_Content_dayList_ctl02_compListData_ctl01_dayLink"><span id="ctl00_Content_dayList_ctl02_compListData_ctl01_dayLinkText">Endgültige Wertung</span></asp></a>
-                                </div>
+							<div id="ctl00_Content_dayList_ctl02_compListData_ctl01_pnlLink" class="std_select_item" style="width:100%">
+								<a href="scoreDay.aspx?cId=388&idDay=5710" id="ctl00_Content_dayList_ctl02_compListData_ctl01_dayLink"><span id="ctl00_Content_dayList_ctl02_compListData_ctl01_dayLinkText">Final scoring</span></asp></a>
+							</div>
 
 
-                            </td>
+						</td>
 
 
-                        </tr>
+			</tr>
 
-                        <tr>
-                            <td class="h5">
-                                <span id="ctl00_Content_dayList_ctl03_lblDay">Tag 3</span>,<br />
-                                <span id="ctl00_Content_dayList_ctl03_lblWeekDay">Sa</span>
-                                <span id="ctl00_Content_dayList_ctl03_lblDate">03.06.2017</span>
-                            </td>
+			<tr>
+				<td class="h5">
+					<span id="ctl00_Content_dayList_ctl03_lblDay">Day 3</span>,<br />
+					<span id="ctl00_Content_dayList_ctl03_lblWeekDay">Sat</span>
+					<span id="ctl00_Content_dayList_ctl03_lblDate">6/3/2017</span>
+				</td>
 
-                            <!-- vaiable number of colums -->
+				<!-- vaiable number of colums -->
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
 
 
-                                <div id="ctl00_Content_dayList_ctl03_compListData_ctl00_pnlStatic" style="font-weight:normal !important">
-                                    <span id="ctl00_Content_dayList_ctl03_compListData_ctl00_dayStatic">Neutralisiert</span>
-                                </div>
-                            </td>
+							<div id="ctl00_Content_dayList_ctl03_compListData_ctl00_pnlStatic" style="font-weight:normal !important">
+								<span id="ctl00_Content_dayList_ctl03_compListData_ctl00_dayStatic">Cancelled</span>
+							</div>
+						</td>
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
 
 
-                                <div id="ctl00_Content_dayList_ctl03_compListData_ctl01_pnlStatic" style="font-weight:normal !important">
-                                    <span id="ctl00_Content_dayList_ctl03_compListData_ctl01_dayStatic">Neutralisiert</span>
-                                </div>
-                            </td>
+							<div id="ctl00_Content_dayList_ctl03_compListData_ctl01_pnlStatic" style="font-weight:normal !important">
+								<span id="ctl00_Content_dayList_ctl03_compListData_ctl01_dayStatic">Cancelled</span>
+							</div>
+						</td>
 
 
-                        </tr>
+			</tr>
 
-                        <tr>
-                            <td class="h5">
-                                <span id="ctl00_Content_dayList_ctl04_lblDay">Tag 4</span>,<br />
-                                <span id="ctl00_Content_dayList_ctl04_lblWeekDay">So</span>
-                                <span id="ctl00_Content_dayList_ctl04_lblDate">04.06.2017</span>
-                            </td>
+			<tr>
+				<td class="h5">
+					<span id="ctl00_Content_dayList_ctl04_lblDay">Day 4</span>,<br />
+					<span id="ctl00_Content_dayList_ctl04_lblWeekDay">Sun</span>
+					<span id="ctl00_Content_dayList_ctl04_lblDate">6/4/2017</span>
+				</td>
 
-                            <!-- vaiable number of colums -->
+				<!-- vaiable number of colums -->
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
 
 
-                                <div id="ctl00_Content_dayList_ctl04_compListData_ctl00_pnlStatic" style="font-weight:normal !important">
-                                    <span id="ctl00_Content_dayList_ctl04_compListData_ctl00_dayStatic">Neutralisiert</span>
-                                </div>
-                            </td>
+							<div id="ctl00_Content_dayList_ctl04_compListData_ctl00_pnlStatic" style="font-weight:normal !important">
+								<span id="ctl00_Content_dayList_ctl04_compListData_ctl00_dayStatic">Cancelled</span>
+							</div>
+						</td>
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
 
 
-                                <div id="ctl00_Content_dayList_ctl04_compListData_ctl01_pnlStatic" style="font-weight:normal !important">
-                                    <span id="ctl00_Content_dayList_ctl04_compListData_ctl01_dayStatic">Neutralisiert</span>
-                                </div>
-                            </td>
+							<div id="ctl00_Content_dayList_ctl04_compListData_ctl01_pnlStatic" style="font-weight:normal !important">
+								<span id="ctl00_Content_dayList_ctl04_compListData_ctl01_dayStatic">Cancelled</span>
+							</div>
+						</td>
 
 
-                        </tr>
+			</tr>
 
-                        <tr>
-                            <td class="h5">
-                                <span id="ctl00_Content_dayList_ctl05_lblDay">Tag 5</span>,<br />
-                                <span id="ctl00_Content_dayList_ctl05_lblWeekDay">Mo</span>
-                                <span id="ctl00_Content_dayList_ctl05_lblDate">05.06.2017</span>
-                            </td>
+			<tr>
+				<td class="h5">
+					<span id="ctl00_Content_dayList_ctl05_lblDay">Day 5</span>,<br />
+					<span id="ctl00_Content_dayList_ctl05_lblWeekDay">Mon</span>
+					<span id="ctl00_Content_dayList_ctl05_lblDate">6/5/2017</span>
+				</td>
 
-                            <!-- vaiable number of colums -->
+				<!-- vaiable number of colums -->
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
-                                <div id="ctl00_Content_dayList_ctl05_compListData_ctl00_pnlLink" class="std_select_item" style="width:100%">
-                                    <a href="scoreDay.aspx?cId=388&idDay=5794" id="ctl00_Content_dayList_ctl05_compListData_ctl00_dayLink"><span id="ctl00_Content_dayList_ctl05_compListData_ctl00_dayLinkText">Endgültige Wertung</span></asp></a>
-                                </div>
+							<div id="ctl00_Content_dayList_ctl05_compListData_ctl00_pnlLink" class="std_select_item" style="width:100%">
+								<a href="scoreDay.aspx?cId=388&idDay=5794" id="ctl00_Content_dayList_ctl05_compListData_ctl00_dayLink"><span id="ctl00_Content_dayList_ctl05_compListData_ctl00_dayLinkText">Final scoring</span></asp></a>
+							</div>
 
 
-                            </td>
+						</td>
 
-                            <td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
+						<td class="h4" style="width:150px; height:25px; margin-left: auto; margin-right: auto; vertical-align:middle; padding:0px;margin:0px;">
 
-                                <div id="ctl00_Content_dayList_ctl05_compListData_ctl01_pnlLink" class="std_select_item" style="width:100%">
-                                    <a href="scoreDay.aspx?cId=388&idDay=5797" id="ctl00_Content_dayList_ctl05_compListData_ctl01_dayLink"><span id="ctl00_Content_dayList_ctl05_compListData_ctl01_dayLinkText">Endgültige Wertung</span></asp></a>
-                                </div>
+							<div id="ctl00_Content_dayList_ctl05_compListData_ctl01_pnlLink" class="std_select_item" style="width:100%">
+								<a href="scoreDay.aspx?cId=388&idDay=5797" id="ctl00_Content_dayList_ctl05_compListData_ctl01_dayLink"><span id="ctl00_Content_dayList_ctl05_compListData_ctl01_dayLinkText">Final scoring</span></asp></a>
+							</div>
 
 
-                            </td>
+						</td>
 
 
-                        </tr>
+			</tr>
 
-                    </table>
+			</table>
 
-                </div>
+	</div>
 
 
-            </div>
+					</div>
 
 
-        </div>
-    </div>
+				</div>
+			</div>
 
-    <div class="clear"></div>
+			<div class="clear"></div>
 
-    <div id="content_login" class="std std_border std_rounded_corners" style="width:400px;">
-        <table>
-            <tr>
-                <td colspan="2">
-                    <div id="errMsg" class="errorMsg"></div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Benutzername:
-                </td>
-                <td>
-                    <input id="username" type="text"  name="username" style="width:90%"/>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Passwort:
-                </td>
-                <td>
-                    <input id="password" type="password"  name="password" style="width:90%"/>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2" style="height: 26px">
-                    <input id="btnLogin" type="submit" value="Login" onclick="return onLoginSubmit();"/>
-                    <a href="forgotPassword.aspx" id="ctl00_aForgotPwd"><span style="font-weight:bold; color:#669933;">Passwort vergessen</span></a>
-                </td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    Sie wollen einen eigenen Wettbewerb ausrichten, sind noch nicht registriert? <a href="http://www.strepla.de/scs/General/Deutsch/indexBestellung.htm"><span style="font-weight:bold; color:#669933;">Melden Sie sich hier an!</span></a>
-                </td>
-            </tr>
-        </table>
-    </div>
-</form>
-</body>
+			<div id="content_login" class="std std_border std_rounded_corners" style="width:400px;">
+				<table>
+					<tr>
+						<td colspan="2">
+							<div id="errMsg" class="errorMsg"></div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Benutzername:
+						</td>
+						<td>
+							<input id="username" type="text"  name="username" style="width:90%"/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							Passwort:
+						</td>
+						<td>
+							<input id="password" type="password"  name="password" style="width:90%"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2" style="height: 26px">
+                            <input id="btnLogin" type="submit" value="Login" onclick="return onLoginSubmit();"/>
+							<a href="forgotPassword.aspx" id="ctl00_aForgotPwd"><span style="font-weight:bold; color:#669933;">Passwort vergessen</span></a>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							Sie wollen einen eigenen Wettbewerb ausrichten, sind noch nicht registriert? <a href="http://www.strepla.de/scs/General/Deutsch/indexBestellung.htm"><span style="font-weight:bold; color:#669933;">Melden Sie sich hier an!</span></a>
+						</td>
+					</tr>
+				</table>
+			</div>
+		</form>
+	</body>
 </html>
