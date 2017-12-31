@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`overview ec17 1`] = `
+Object {
+  "classes": Array [
+    "Hasen",
+    "Igel",
+  ],
+  "days": Array [
+    Object {
+      "date": "01.06.2017",
+      "results": Object {
+        "Hasen": Object {
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5680",
+        },
+        "Igel": Object {
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5698",
+        },
+      },
+    },
+    Object {
+      "date": "02.06.2017",
+      "results": Object {
+        "Hasen": Object {
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5701",
+        },
+        "Igel": Object {
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5710",
+        },
+      },
+    },
+    Object {
+      "date": "03.06.2017",
+      "results": Object {
+        "Hasen": Object {
+          "link": null,
+        },
+        "Igel": Object {
+          "link": null,
+        },
+      },
+    },
+    Object {
+      "date": "04.06.2017",
+      "results": Object {
+        "Hasen": Object {
+          "link": null,
+        },
+        "Igel": Object {
+          "link": null,
+        },
+      },
+    },
+    Object {
+      "date": "05.06.2017",
+      "results": Object {
+        "Hasen": Object {
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5794",
+        },
+        "Igel": Object {
+          "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5797",
+        },
+      },
+    },
+  ],
+  "description": "Aachen Merzbrück (EDKA) 01.06.2017-05.06.2017",
+  "logoUrl": "http://strepla.de/scs/data/comp_388/data/logo.png",
+  "name": "17. EuregioCup 2017",
+}
+`;
