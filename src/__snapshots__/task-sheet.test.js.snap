@@ -230,3 +230,64 @@ Object {
   "type": "racing",
 }
 `;
+
+exports[`taskSheet luesse17-aat 1`] = `
+Object {
+  "description": "Speed Assigned Area Task (AAT)  120.0 km < D < 218.9 km  (Tmin=01:30)",
+  "distance": null,
+  "maxDistance": 218900,
+  "minDistance": 120000,
+  "minTime": 5400,
+  "turnpoints": Array [
+    Object {
+      "aatRadial1": null,
+      "aatRadial2": null,
+      "aatRadius": null,
+      "course": null,
+      "distance": null,
+      "elevation": 40,
+      "latitude": 52.87694444444445,
+      "longitude": 11.194722222222222,
+      "name": "228Start West",
+      "number": "228",
+    },
+    Object {
+      "aatRadial1": 0,
+      "aatRadial2": 0,
+      "aatRadius": 15000,
+      "course": 228,
+      "distance": 64800,
+      "elevation": 111,
+      "latitude": 52.870555555555555,
+      "longitude": 10.182777777777778,
+      "name": "111Helmstedt Rote",
+      "number": "111",
+    },
+    Object {
+      "aatRadial1": 0,
+      "aatRadial2": 0,
+      "aatRadius": 15000,
+      "course": 89,
+      "distance": 59800,
+      "elevation": 52,
+      "latitude": 52.870555555555555,
+      "longitude": 11.1975,
+      "name": "043Burg",
+      "number": "043",
+    },
+    Object {
+      "aatRadial1": null,
+      "aatRadial2": null,
+      "aatRadius": null,
+      "course": 357,
+      "distance": 43100,
+      "elevation": 55,
+      "latitude": 52.87694444444445,
+      "longitude": 11.196944444444444,
+      "name": "231Stendal Borstel",
+      "number": "231",
+    },
+  ],
+  "type": "aat",
+}
+`;
