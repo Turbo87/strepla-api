@@ -2,6 +2,7 @@ const got = require('got');
 const cheerio = require('cheerio');
 
 const { label } = require('./utils/selectors');
+const regexParse = require('./utils/regex');
 const { parseDate } = require('./utils/date');
 
 const BASE_URL = 'http://strepla.de/scs/Public/scoreDay.aspx';
@@ -72,14 +73,9 @@ function parseResult($result) {
 }
 
 function parseTime(str) {
-  if (!str) { return null; }
-
-  let match = str.trim().match(/^(\d+):(\d+):(\d+)/);
-  if (match) {
+  return regexParse(str.trim(), /^(\d+):(\d+):(\d+)/, match => {
     return parseInt(match[1]) * 3600 + parseInt(match[2]) * 60 + parseInt(match[3])
-  }
-
-  return null;
+  });
 }
 
 module.exports = { scoreDay, parseScoreDay };

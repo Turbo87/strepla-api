@@ -2,6 +2,7 @@ const got = require('got');
 const cheerio = require('cheerio');
 
 const { label } = require('./utils/selectors');
+const regexParse = require('./utils/regex');
 const { parseDate } = require('./utils/date');
 
 const BASE_URL = 'http://strepla.de/scs/Public/taskSheet.aspx';
@@ -36,14 +37,7 @@ function parseTaskSheet(body) {
 }
 
 function parseDay(str) {
-  if (!str) { return null; }
-
-  let match = str.match(/\s(\d+)\. Day/);
-  if (match) {
-    return parseInt(match[1], 10);
-  }
-
-  return null;
+  return regexParse(str, /\s(\d+)\. Day/, match => parseInt(match[1], 10));
 }
 
 function parseDescription(str) {
@@ -103,40 +97,23 @@ const UNIT_CONVERSIONS = {
 };
 
 function parseValue(str) {
-  if (!str) { return null; }
-
-  let match = str.match(/^(\d+(?:\.\d+)?) (m|km)$/);
-  if (match) {
+  return regexParse(str, /^(\d+(?:\.\d+)?) (m|km)$/, match => {
     let value = parseFloat(match[1]);
     let unit = match[2];
     return UNIT_CONVERSIONS[unit](value);
-  }
-
-  return null;
+  });
 }
 
 function parseAngle(str) {
-  if (!str) { return null; }
-
-  let match = str.match(/(\d+)°/);
-  if (match) {
-    return parseInt(match[1], 10);
-  }
-
-  return null;
+  return regexParse(str, /(\d+)°/, match => parseInt(match[1], 10));
 }
 
 function parseGeoAngle(str) {
-  if (!str) { return null; }
-
-  let match = str.match(/([NSEW])(\d+)°(\d+)'(\d+)''/);
-  if (match) {
+  return regexParse(str, /([NSEW])(\d+)°(\d+)'(\d+)''/, match => {
     let negative = ['S', 'W'].includes(match[1]);
     let value = parseFloat(match[2]) + parseFloat(match[2]) / 60 + parseFloat(match[3]) / (60 * 60);
     return negative ? -value : value;
-  }
-
-  return null;
+  });
 }
 
 module.exports = { taskSheet, parseTaskSheet };
