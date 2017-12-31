@@ -11,11 +11,11 @@ Object {
       "date": "2017-06-01",
       "results": Object {
         "Hasen": Object {
-          "idDay": "5680",
+          "idDay": 5680,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5680",
         },
         "Igel": Object {
-          "idDay": "5698",
+          "idDay": 5698,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5698",
         },
       },
@@ -24,11 +24,11 @@ Object {
       "date": "2017-06-02",
       "results": Object {
         "Hasen": Object {
-          "idDay": "5701",
+          "idDay": 5701,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5701",
         },
         "Igel": Object {
-          "idDay": "5710",
+          "idDay": 5710,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5710",
         },
       },
@@ -63,11 +63,11 @@ Object {
       "date": "2017-06-05",
       "results": Object {
         "Hasen": Object {
-          "idDay": "5794",
+          "idDay": 5794,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5794",
         },
         "Igel": Object {
-          "idDay": "5797",
+          "idDay": 5797,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=388&idDay=5797",
         },
       },
@@ -89,7 +89,7 @@ Object {
       "date": "2017-07-12",
       "results": Object {
         "Club": Object {
-          "idDay": "6115",
+          "idDay": 6115,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6115",
         },
       },
@@ -98,7 +98,7 @@ Object {
       "date": "2017-07-13",
       "results": Object {
         "Club": Object {
-          "idDay": "6118",
+          "idDay": 6118,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6118",
         },
       },
@@ -107,7 +107,7 @@ Object {
       "date": "2017-07-14",
       "results": Object {
         "Club": Object {
-          "idDay": "6139",
+          "idDay": 6139,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6139",
         },
       },
@@ -116,7 +116,7 @@ Object {
       "date": "2017-07-15",
       "results": Object {
         "Club": Object {
-          "idDay": "6148",
+          "idDay": 6148,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6148",
         },
       },
@@ -134,7 +134,7 @@ Object {
       "date": "2017-07-17",
       "results": Object {
         "Club": Object {
-          "idDay": "6160",
+          "idDay": 6160,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6160",
         },
       },
@@ -143,7 +143,7 @@ Object {
       "date": "2017-07-18",
       "results": Object {
         "Club": Object {
-          "idDay": "6175",
+          "idDay": 6175,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6175",
         },
       },
@@ -170,7 +170,7 @@ Object {
       "date": "2017-07-21",
       "results": Object {
         "Club": Object {
-          "idDay": "6205",
+          "idDay": 6205,
           "link": "http://strepla.de/scs/Public/scoreDay.aspx?cId=397&idDay=6205",
         },
       },

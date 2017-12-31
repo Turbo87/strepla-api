@@ -33,7 +33,10 @@ function parseOverviewPage(body) {
       let idDay = null;
       if (link) {
         link = new URL(link, BASE_URL);
-        idDay = link.searchParams.get('idDay');
+        idDay = link.searchParams.get('idDay') || null;
+        if (idDay) {
+          idDay = parseInt(idDay, 10);
+        }
       }
 
       results[classes[i]] = { link, idDay };
